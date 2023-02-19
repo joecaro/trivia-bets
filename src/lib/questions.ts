@@ -15,3 +15,47 @@ export const defaultQuestions = [
     new Question('What year was the first olympics held in France', ['1896', '1900', '1904', '1908'], '1900'),
     new Question('What year was the first olympics held in Germany', ['1896', '1900', '1904', '1908'], '1896'),
 ];
+
+export const triviaQuestions = [
+    {
+        question: "In what year did the United States enter World War II?",
+        answer: "1941"
+    },
+    {
+        question: "How many players are there on a regulation basketball team?",
+        answer: "5"
+    },
+    {
+        question: "How many states are there in the United States?",
+        answer: "50"
+    },
+    {
+        question: "What is the highest score possible in a game of ten-pin bowling?",
+        answer: "300"
+    },
+    {
+        question: "How many moons does the planet Earth have?",
+        answer: "1"
+    },
+    {
+        question: "How many legs does a spider have?",
+        answer: "8"
+    },
+    {
+        question: "How many strings does a standard guitar have?",
+        answer: "6"
+    },
+    {
+        question: "How many times has the United States won the FIFA World Cup?",
+        answer: "1"
+    },
+    {
+        question: "How many ounces are in a pound?",
+        answer: "16"
+    },
+    {
+        question: "How many sides does a hexagon have?",
+        answer: "6"
+    }
+]
+

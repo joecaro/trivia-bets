@@ -8,28 +8,41 @@ const STAGE_MAP = {
     "finished": "finished"
 }
 
-export type AnswerGroup = {
-    answers: { [userId: string]: string },
-    correctAnswer: string | null
-}
+export type UserId = string;
 
-export type Round = {
-    bets: {
-        [userId: string]: {
-            tokens: [number | null, number | null],
-            chips: number[]
-        }
+export type AnswerGroup = {
+    answers: { [userId: string]: {
+        answer: string,
+        isCorrect: boolean
+    } },
+    closestAnswer: {
+        userId: string,
+        answer: string
     }
 }
 
+export type Bet ={
+    answer: string | null,
+    chips: number
+    payout: number
+}
+export type BetGroup = {
+    [userId: string]:  [Bet, Bet]
+}
+
+export type Round = {
+    bets: BetGroup;
+    answers: AnswerGroup
+    scores: { [userId: UserId]: number }
+}
+
 export interface GameState {
-    users: { [userId: string]: User },
-    userList: User[]
-    currentQuestionIndex: number;
-    currentQuestion: Question | null;
+    id: string;
+    users: User[];
     questions: Question[];
-    answers: AnswerGroup[];
+    currentQuestionIndex: number;
+    currentAnswers: AnswerGroup;
+    currentBets: BetGroup;
     rounds: Round[];
     stage: keyof typeof STAGE_MAP;
-    isFinished: boolean;
 };

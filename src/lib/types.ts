@@ -37,7 +37,7 @@ export type Round = {
 }
 
 export interface GameState {
-    id: string;
+    _id: string;
     users: User[];
     questions: Question[];
     currentQuestionIndex: number;

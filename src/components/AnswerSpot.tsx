@@ -4,6 +4,7 @@ import { useDrop } from 'react-dnd'
 
 import { useGame } from "../context/gameContext";
 import { useSocket } from "../context/socketContext";
+import splitChipsIntoGroups from '../lib/splitChips';
 import { Bet } from '../lib/types';
 import ChipStack from './ChipStack';
 import Token from "./Token";
@@ -82,22 +83,24 @@ export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, od
         <div className='grid gap-2'>
             <div
                 ref={drop}
-                className={` ${!answer && 'opacity-30'} bg-slate-400 rounded flex flex-col justify-between items-center cursor-pointer w-40 h-60 relative`}
+                className={` ${!answer && 'opacity-30'} bg-slate-400 rounded flex flex-col justify-between items-center cursor-pointer w-40 h-60 relative shadow`}
             >
-                <div className="flex gap-3 w-full">
+                <div className="flex gap-3 absolute top-0 left-0 w-full">
                     <div className='px-1 py-2'>
                         {tokens.map(token => token)}
                     </div>
-                    <div className="w-full flex flex-wrap gap-3">
+                    <div className="w-full flex flex-wrap gap-1">
                         {!!chips.length && chips.map((chips, idx) => <ChipStack key={`${answer}-chips-${idx}`} chips={chips} />)}
                     </div>
                 </div>
-                <p className={`w-3/4 py-2 px-5 bg-amber-100 rounded-sm  text-slate-800 ${label ? 'text-lg' : 'text-2xl'} flex justify-center items-center shadow`}>{label || answer || ''}</p>
+                <div className='flex flex-col w-full flex-1 justify-center items-center'>
+                    <p className={`w-3/4 py-2 px-5 bg-amber-100 rounded-sm  text-slate-800 ${label ? 'text-lg' : 'text-2xl'} flex justify-center items-center shadow`}>{label || answer || ''}</p>
+                </div>
                 <div className='grid grid-cols-3 bg-slate-300 w-full rounded p-1'>
                     <div></div>
                     <p className="text-slate-100 bg-slate-500 text-center rounded">{odds}</p>
                     <div>
-                        <div className='flex gap-1'>
+                        <div className='flex px-1 gap-1'>
                             {otherBets.map(([userId, bets], idx) => (
                                 <div className='py-1' key={userId}>
                                     {
@@ -126,39 +129,3 @@ export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, od
     )
 }
 
-function splitChipsIntoGroups(chips: number): number[] {
-    const groups = [];
-
-    // split chips into groups of 5 for the first 10 chips
-    if (chips <= 10) {
-        for (let i = 5; i <= chips; i += 5) {
-            groups.push(5);
-        }
-        chips % 5 > 0 && groups.push(chips % 5)
-    }
-    // split chips into groups of 10 till 100
-    else if (chips <= 100) {
-        for (let i = 5; i <= 10; i += 5) {
-            groups.push(5);
-        }
-        for (let i = 20; i <= chips; i += 10) {
-            groups.push(10);
-        }
-        chips % 10 > 0 && groups.push(chips % 10)
-    }
-    // split chips into groups of 20 for any remaining chips
-    else {
-        for (let i = 0; i <= 10; i += 5) {
-            groups.push(5);
-        }
-        for (let i = 20; i <= 100; i += 10) {
-            groups.push(10);
-        }
-        for (let i = 120; i <= chips; i += 20) {
-            groups.push(20);
-        }
-        chips % 20 > 0 && groups.push(chips % 20)
-    }
-
-    return groups;
-}

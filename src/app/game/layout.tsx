@@ -10,6 +10,7 @@ import ChipStack from "../../components/ChipStack";
 import QuestionProgress from "../../components/QuestionProgress";
 import DragProvider from "../../context/DndContext";
 import GameSettings from "./(GameSettings)";
+import splitChipsIntoGroups from "../../lib/splitChips";
 
 
 export default function GamePage({
@@ -37,8 +38,7 @@ function PageLayout({ children }: { children: React.ReactNode}) {
     const { gameState, stage, users, userBets } = useGame()
 
     const user = gameState?.users?.find(user => user.id === socket.id);
-    const chipGroups = Math.floor(user?.chips ? user.chips / 5 : 0);
-    const remainingChips = user?.chips ? user.chips % 5 : 0;
+    const chipGroups = splitChipsIntoGroups(user?.chips || 0)
 
     return (
         <div className='h-full p-5 flex flex-col justify-between'>
@@ -71,13 +71,9 @@ function PageLayout({ children }: { children: React.ReactNode}) {
                         ) : null}
                     </div>
                     <div className="grid grid-cols-5 relative">
-                        {chipGroups > 0 ? Array(chipGroups).fill(0).map((_, i) => (
-                            <ChipStack chips={5} key={`user-token-${i}}`} />
-                        )
-                        ) : null}
-                        {remainingChips > 0 ? (
-                            <ChipStack chips={remainingChips} />
-                        ) : null}
+                        {!!chipGroups.length ? chipGroups.map((group, i) => (
+                            <ChipStack key={i} chips={group} />
+                        )) : null}
                     </div>
                 </div>
             </div>

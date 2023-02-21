@@ -61,9 +61,9 @@ export default function Finished() {
                 <div>
                     <p className="text-lg font-bold">Congrats!</p>
                 </div>
-                <div className="flex gap-3 border p-2">
-                    {users.map((user, idx) => (
-                        <div key={`result-${user.id}`} className={`flex gap-8 items-center rounded p-2 ${idx % 2 === 0 ? "bg-slate-100" : ''}`}>
+                <div className="flex flex-col gap-3 border p-2 rounded">
+                    {users.sort((a, b) => b.chips - a.chips).map((user, idx) => (
+                        <div key={`result-${user.id}`} className={`flex gap-8 justify-between items-center rounded p-2 ${idx === 0 ? "bg-animated" : idx % 2 === 0 ? "bg-slate-100" : ''}`}>
                             <p className=" text-slate-800">{user.name}</p>
                             <p className="text-xl font-bold">{user.chips}</p>
                         </div>

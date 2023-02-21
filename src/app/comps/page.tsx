@@ -8,6 +8,7 @@ import ChipStack from "../../components/ChipStack";
 import Player from "../../components/Player";
 import QuestionProgress from "../../components/QuestionProgress";
 import Token from "../../components/Token";
+import splitChipsIntoGroups from "../../lib/splitChips";
 
 const WIDTH = 24;
 const CURRENT_QUESTION = 1;
@@ -66,12 +67,22 @@ export default function Page() {
             <AnswerCard
                     onDrop={console.log}
                     tokens={[<Token key={'yeppy'} token='wejjs' index={123}/>, <Token key={'ppy'} token='wejjs' index={123}/>]}
+                    chips={splitChipsIntoGroups(100, 'condensed')}
+                    label='label'
+                    answer='answer'
+                    otherBets={[]}
+                    odds='2-1'
+                    userChips={100}
+                />
+            <AnswerCard
+                    onDrop={console.log}
+                    tokens={[<Token key={'yeppy'} token='wejjs' index={123}/>, <Token key={'ppy'} token='wejjs' index={123}/>]}
                     chips={[]}
                     label='label'
                     answer='answer'
                     otherBets={[]}
                     odds='2-1'
-                    userChips={0}
+                    userChips={100}
                 />
             </Container>
             <Container>

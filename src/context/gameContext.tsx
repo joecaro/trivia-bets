@@ -111,9 +111,9 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
                 setUsers(state.users || [])
                 setStage(state.stage || 'lobby')
                 setQuestions(state.questions || [])
-                setGameId(state.id || '')
+                setGameId(state._id || '')
                 setGameState(state)
-                storeGame(state.id || '')
+                storeGame(state._id || '')
             });
         }
 

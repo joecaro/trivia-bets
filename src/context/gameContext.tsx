@@ -91,7 +91,6 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
     }, [socket])
 
     const betChip = useCallback((betIdx: number, amount: number = 1) => {
-        console.log('betChip', betIdx, amount);
 
         if (socket) {
             socket.emit('betChip', betIdx, amount)
@@ -106,8 +105,9 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
 
         if (socket) {
             socket.on('gameState', (state) => {
-                console.log('Received message from server:');
+                console.group('gameState event')
                 console.log({ state });
+                console.groupEnd();
                 setUsers(state.users || [])
                 setStage(state.stage || 'lobby')
                 setQuestions(state.questions || [])

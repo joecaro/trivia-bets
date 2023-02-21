@@ -5,7 +5,7 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useState 
 import { io, Socket } from "socket.io-client";
 import { GameState } from "../lib/types";
 
-export const socketIp = '192.168.0.245'
+export const socketIp = process.env.NEXT_PUBLIC_WS_URL;
 
 type STCEventMap = {
     'gameState': (state: GameState) => void,
@@ -25,7 +25,7 @@ type CTSEventMap = {
     'newGame': () => void,
 }
 
-const socket = io(socketIp + ':8080');
+const socket = io(socketIp || 'http://localhost:8080');
 
 
 const SocketContext = createContext<{
@@ -34,12 +34,7 @@ const SocketContext = createContext<{
 }>({ socket: socket, storeGame: () => { } })
 
 const SocketProvider = ({ children }: { children: ReactNode }) => {
-    const searchParams = useSearchParams();
-
     const storeGame = useCallback((gameId: string) => {
-        console.log('storing game');
-        console.log('gameId', gameId);
-
         localStorage.setItem('gameId', JSON.stringify({ gameId, id: socket.id}));
     }, [])
 
@@ -47,12 +42,7 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
         const storedGame = localStorage.getItem('gameId');
 
         if (storedGame) {
-            console.log('retrieving game');
             const { gameId, id } = JSON.parse(storedGame);
-
-            console.log({storedGame, gameId, id});
-            
-            
             socket.emit('reconnect', id, gameId);
         }
     }, [])

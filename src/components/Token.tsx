@@ -1,7 +1,8 @@
+import { Ref } from 'react';
 import { useDrag } from 'react-dnd'
 
 export default function Token({token, index}: {token: string, index: number}) {
-    const [collected, drag, dragPreview] = useDrag(() => ({
+    const [collected, drag, dragPreview]: [{isDragging: boolean}, Ref<HTMLElement>, Ref<HTMLElement>] = useDrag(() => ({
         type: 'token',
         item: { idx: index },
     }))

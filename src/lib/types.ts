@@ -44,5 +44,6 @@ export interface GameState {
     currentAnswers: AnswerGroup;
     currentBets: BetGroup;
     rounds: Round[];
+    allRounds: Round[];
     stage: keyof typeof STAGE_MAP;
 };

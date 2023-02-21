@@ -15,7 +15,8 @@ export interface IGameContext {
     create: (username: string) => void,
     register: (username: string, gameId: string) => void,
     unregister: () => void,
-    start: () => void,
+    nextStage: () => void,
+    newGame: () => void,
     submitAnswer: (answer: string) => void,
     userBets: [Bet, Bet]
     bet: (answer: string, payout: number, betIdx: number) => void,
@@ -34,7 +35,8 @@ const GameContext = createContext<IGameContext>({
     create: () => { },
     register: () => { },
     unregister: () => { },
-    start: () => { },
+    nextStage: () => { },
+    newGame: () => { },
     submitAnswer: () => { },
     userBets: defaultBets,
     bet: () => { },
@@ -70,9 +72,9 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [socket])
 
-    const start = useCallback(() => {
+    const nextStage = useCallback(() => {
         if (socket) {
-            socket.emit('start')
+            socket.emit('nextStage')
         }
     }, [socket])
 
@@ -94,6 +96,10 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
         if (socket) {
             socket.emit('betChip', betIdx, amount)
         }
+    }, [socket])
+
+    const newGame = useCallback(() => {
+        socket.emit('newGame');
     }, [socket])
 
     useEffect(() => {
@@ -133,7 +139,8 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
             create,
             register,
             unregister,
-            start,
+            nextStage,
+            newGame,
             submitAnswer,
             userBets,
             bet,

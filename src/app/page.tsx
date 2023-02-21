@@ -11,7 +11,7 @@ export default function Home() {
       </Head>
 
       <main >
-          <Link href='/game' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Start Game</Link>
+          <Link href='/game' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Play Game</Link>
       </main>
     </div>
   )

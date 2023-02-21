@@ -18,10 +18,11 @@ type CTSEventMap = {
     'register': (user: string, gameId: string) => void,
     'reconnect': (id: string, gameId: string) => void,
     'unregister': () => void,
-    'start': () => void,
+    'nextStage': () => void,
     'submitAnswer': (answer: string) => void,
     'bet': (answer: string, payout: number, betIdx:  number) => void,
     'betChip': (betIdx: number, amount: number) => void,
+    'newGame': () => void,
 }
 
 const socket = io(socketIp + ':8080');

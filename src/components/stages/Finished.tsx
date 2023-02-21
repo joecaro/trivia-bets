@@ -40,7 +40,7 @@ export const options = {
 export default function Finished() {
     const { gameState, users } = useGame()
 
-    const labels = gameState?.rounds?.map((round, idx) => `Round ${idx + 1}`) || []
+    const labels = gameState?.allRounds?.map((round, idx) => `Round ${idx + 1}`) || []
 
     const data = {
         labels,
@@ -48,7 +48,7 @@ export default function Finished() {
             const randomDegree = Math.floor(Math.random() * 360)
             return {
                 label: user.name,
-                data: gameState?.rounds?.map(round => round.scores[user.id]),
+                data: gameState?.allRounds?.map(round => round.scores[user.id]),
                 borderColor: `hsl(${randomDegree}, 100%, 50%)`,
                 backgroundColor: `hsla(${randomDegree}, 100%, 50%, 0.5)`
             }

@@ -11,6 +11,7 @@ import QuestionProgress from "../../components/QuestionProgress";
 import DragProvider from "../../context/DndContext";
 import GameSettings from "./(GameSettings)";
 import splitChipsIntoGroups from "../../lib/splitChips";
+import ErrorModal from "./(ErrorModal)";
 
 
 export default function GamePage({
@@ -26,6 +27,7 @@ export default function GamePage({
                 <DragProvider>
                     <PageLayout>
                         {children}
+                        <ErrorModal />
                     </PageLayout>
                 </DragProvider>
             </GameProvider>

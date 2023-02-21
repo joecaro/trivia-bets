@@ -1,8 +1,9 @@
 "use client"
 
-import { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { Router, useRouter } from "next/router";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { Question, User } from "../lib/classes";
-import { AnswerGroup, Bet, GameState } from "../lib/types";
+import { Bet, GameState } from "../lib/types";
 import { useSocket } from "./socketContext";
 
 export interface IGameContext {
@@ -21,6 +22,8 @@ export interface IGameContext {
     userBets: [Bet, Bet]
     bet: (answer: string, payout: number, betIdx: number) => void,
     betChip: (betIdx: number, amount: number) => void
+    error: string | null,
+    dismissError: () => void
 }
 
 const defaultBets: [Bet, Bet] = [{ answer: '', chips: 0, payout: 1 }, { answer: '', chips: 0, payout: 1 }];
@@ -40,10 +43,13 @@ const GameContext = createContext<IGameContext>({
     submitAnswer: () => { },
     userBets: defaultBets,
     bet: () => { },
-    betChip: () => { }
+    betChip: () => { },
+    error: null,
+    dismissError: () => {}
 })
 
 const GameProvider = ({ children }: { children: ReactNode }) => {
+    const [error, setError] = useState<string | null>(null);
     const { socket, storeGame } = useSocket();
     const [users, setUsers] = useState<User[]>([]);
     const [gameId, setGameId] = useState('')
@@ -101,6 +107,13 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
         socket.emit('newGame');
     }, [socket])
 
+    const dismissError = useCallback(() => {
+        window.localStorage && window.localStorage.removeItem('gameId');
+        setError(null);
+        setGameState(null);
+        window.location.reload();
+    }, [])
+
     useEffect(() => {
 
         if (socket) {
@@ -119,6 +132,10 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
 
         socket.on('noReconnect', () => {
             console.log('No reconnect');
+        });
+
+        socket.on('noGame', () => {
+            setError('No game found');
         });
 
         return () => {
@@ -144,7 +161,9 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
             submitAnswer,
             userBets,
             bet,
-            betChip
+            betChip,
+            error,
+            dismissError
         }}>
             {children}
         </GameContext.Provider>

@@ -11,6 +11,7 @@ type STCEventMap = {
     'gameState': (state: GameState) => void,
     'noReconnect': () => void,
     'id': (id: string) => void,
+    'noGame': () => void,
 }
 
 type CTSEventMap = {

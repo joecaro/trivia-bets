@@ -7,6 +7,7 @@ import { useSocket } from "./socketContext";
 
 export interface IGameContext {
     gameState: Partial<GameState> | null
+    setGameState: (gameState: Partial<GameState>) => void
     gameId: string,
     users: User[],
     stage: 'lobby' | 'question' | 'bets' | 'tally' | 'finished',
@@ -21,10 +22,11 @@ export interface IGameContext {
     betChip: (betIdx: number, amount: number) => void
 }
 
-const defaultBets: [Bet, Bet] = [{answer: '', chips: 0, payout: 1}, {answer: '', chips: 0, payout: 1}];
+const defaultBets: [Bet, Bet] = [{ answer: '', chips: 0, payout: 1 }, { answer: '', chips: 0, payout: 1 }];
 
 const GameContext = createContext<IGameContext>({
     gameState: null,
+    setGameState: () => { },
     gameId: '',
     users: [],
     stage: 'lobby',
@@ -88,7 +90,7 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
 
     const betChip = useCallback((betIdx: number, amount: number = 1) => {
         console.log('betChip', betIdx, amount);
-        
+
         if (socket) {
             socket.emit('betChip', betIdx, amount)
         }
@@ -99,7 +101,7 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
         if (socket) {
             socket.on('gameState', (state) => {
                 console.log('Received message from server:');
-                console.log(state);
+                console.log({ state });
                 setUsers(state.users || [])
                 setStage(state.stage || 'lobby')
                 setQuestions(state.questions || [])
@@ -118,11 +120,12 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
                 socket.off('gameState');
             }
         }
-    }, [socket]);
+    }, [socket, storeGame]);
 
     return (
         <GameContext.Provider value={{
             gameState,
+            setGameState,
             gameId,
             users,
             stage,

@@ -26,7 +26,6 @@ ChartJS.register(
 
 export const options = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
         legend: {
             position: 'top' as const,
@@ -46,31 +45,33 @@ export default function Finished() {
     const data = {
         labels,
         datasets: users.map(user => {
-                const randomDegree = Math.floor(Math.random() * 360)
-                return {
-                    label: user.name,
-                    data: gameState?.rounds?.map(round => round.scores[user.id]),
-                    borderColor: `hsl(${randomDegree}, 100%, 50%)`,
-                    backgroundColor: `hsla(${randomDegree}, 100%, 50%, 0.5)`
-                }
-            }),
+            const randomDegree = Math.floor(Math.random() * 360)
+            return {
+                label: user.name,
+                data: gameState?.rounds?.map(round => round.scores[user.id]),
+                borderColor: `hsl(${randomDegree}, 100%, 50%)`,
+                backgroundColor: `hsla(${randomDegree}, 100%, 50%, 0.5)`
+            }
+        }),
     };
 
     return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="flex gap-3">
-                {users.map(user => (
-                    <div key={`result-${user.id}`}>
-                        <p className="text-xl font-bold text-slate-100">{user.name}</p>
-                        <p>{user.chips}</p>
-                    </div>
-                ))}
-            </div>
-            <div>
-                <p>Game Done</p>
+        <div className="grid grid-cols-2">
+            <div className="flex flex-col items-center justify-center">
+                <div>
+                    <p className="text-lg font-bold">Congrats!</p>
+                </div>
+                <div className="flex gap-3 border p-2">
+                    {users.map((user, idx) => (
+                        <div key={`result-${user.id}`} className={`flex gap-8 items-center rounded p-2 ${idx % 2 === 0 ? "bg-slate-100" : ''}`}>
+                            <p className=" text-slate-800">{user.name}</p>
+                            <p className="text-xl font-bold">{user.chips}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
             <div className="flex gap-3 bg-white rounded p-2 shadow-md">
-                <Line height={400} width={500} options={options} data={data} />
+                <Line options={options} data={data} />
             </div>
         </div>
     )

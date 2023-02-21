@@ -1,15 +1,15 @@
 'use client'
 
-import { SyntheticEvent, useState } from "react"
-import { useGame } from "../../context/gameContext"
+import GameProvider, { useGame } from "../../context/gameContext"
 import { useRouter } from 'next/navigation';
 import JoinLink from "./(JoinLink)"
-import { useSocket } from "../../context/socketContext"
+import SocketProvider, { useSocket } from "../../context/socketContext"
 import Player from "../../components/Player";
 import Token from "../../components/Token";
-import Chip from "../../components/Chip";
 import ChipStack from "../../components/ChipStack";
 import QuestionProgress from "../../components/QuestionProgress";
+import DragProvider from "../../context/DndContext";
+import GameSettings from "./(GameSettings)";
 
 
 export default function GamePage({
@@ -18,47 +18,57 @@ export default function GamePage({
     children: React.ReactNode
 }) {
     const router = useRouter()
+
+    return (
+        <SocketProvider>
+            <GameProvider>
+                <DragProvider>
+                    <PageLayout>
+                        {children}
+                    </PageLayout>
+                </DragProvider>
+            </GameProvider>
+        </SocketProvider>
+    )
+}
+
+function PageLayout({ children }: { children: React.ReactNode}) {
     const { socket } = useSocket();
-    const { gameState, gameId, users, stage, userBets } = useGame()
+    const { gameState, stage, users, userBets } = useGame()
 
     const user = gameState?.users?.find(user => user.id === socket.id);
     const chipGroups = Math.floor(user?.chips ? user.chips / 5 : 0);
     const remainingChips = user?.chips ? user.chips % 5 : 0;
 
-
-
     return (
         <div className='h-full p-5 flex flex-col justify-between'>
-            <div className="flex items-center justify-between">
-                {gameId ? <JoinLink id={gameId} /> : null}
+            <div className="grid grid-cols-4 gap-y-2">
+                <JoinLink />
                 <QuestionProgress currentQuestion={gameState?.currentQuestionIndex || 0} totalQuestions={10} />
-                <div className='flex flex-col items-center'>
-                    <p className="font-bold">
-                        Stage: {stage}
-                    </p>
-                </div>
+               <GameSettings />
             </div>
             <div className='flex flex-col items-center gap-6'>
-                <h1 className='text-2xl font-bold'>Trivia Game</h1>
                 {stage === 'bets' ? <p>Bets: {JSON.stringify(userBets)}</p> : null}
                 <div className='flex flex-col w-full'>
                     {children}
                 </div>
             </div>
-            <div className="flex justify-between">
-
+            <div className="flex justify-between items-end">
                 <div className="flex gap-3">
                     {
                         users.map((user, i) => <div key={i} className='flex flex-row items-center'>
-                            <Player key={user.id} name={user.name} image="IMAGE" score={user.chips} />
+                            <Player key={user.id} name={user.name} id={user.id} image="IMAGE" score={user.chips} />
                         </div>)
                     }
                 </div>
                 <div className="flex gap-3">
                     <div>
-                        {[0, 1].map(idx => (
-                            <Token key={`token${idx}`} index={idx} token="123" />
-                        ))}
+                        {!userBets[0].answer ? (
+                            <Token index={0} token="123" />
+                        ) : null}
+                        {!userBets[1].answer ? (
+                            <Token index={1} token="123" />
+                        ) : null}
                     </div>
                     <div className="grid grid-cols-5 relative">
                         {chipGroups > 0 ? Array(chipGroups).fill(0).map((_, i) => (

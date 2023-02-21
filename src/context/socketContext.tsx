@@ -1,9 +1,11 @@
 "use client"
 
 import { useSearchParams } from "next/navigation";
-import { createContext, ReactNode, useCallback, useContext, useEffect } from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { GameState } from "../lib/types";
+
+export const socketIp = '192.168.0.245'
 
 type STCEventMap = {
     'gameState': (state: GameState) => void,
@@ -22,7 +24,7 @@ type CTSEventMap = {
     'betChip': (betIdx: number, amount: number) => void,
 }
 
-const socket = io('192.168.0.245:8080');
+const socket = io(socketIp + ':8080');
 
 
 const SocketContext = createContext<{

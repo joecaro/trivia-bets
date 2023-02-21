@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd'
 
 import { useGame } from "../context/gameContext";
 import { useSocket } from "../context/socketContext";
-import Chip from './Chip';
+import { Bet } from '../lib/types';
 import ChipStack from './ChipStack';
 import Token from "./Token";
 
@@ -21,18 +21,11 @@ export default function AnswerSpot({
     onDrop,
     odds
 }: AnswerSpotProps) {
-    const { betChip, userBets, gameState } = useGame()
+    const { userBets, gameState } = useGame()
     const { socket } = useSocket();
 
 
     const userChips = gameState?.users?.find(user => user.id === socket.id)?.chips || 0;
-
-    const [collectedProps, drop] = useDrop(() => ({
-        accept: 'token',
-        drop: (item: { idx: number }) => {
-            onDrop(item.idx)
-        }
-    }))
 
     const tokens = userBets.map((bet, idx) => {
         if (bet.answer === answer) {
@@ -51,45 +44,86 @@ export default function AnswerSpot({
 
     return (
         <div>
-
-            <div
-                ref={drop}
-                className={`p-2 ${!answer && 'opacity-30'} bg-slate-800 border-2 border-slate-200 rounded flex flex-col justify-between items-center cursor-pointer w-40 relative`}
-            >
-                <div className="absolute top-0 left-0">
-                    {tokens.map(token => token)}
-                </div>
-                <div className="absolute bottom-0 w-full flex flex-wrap gap-3">
-                    {!!chips.length && chips.map((chips, idx) => <ChipStack key={`${answer}-chips-${idx}`} chips={chips} />)}
-                </div>
-                <p className={`w-3/4 h-40 px-5 mb-6 border-2 border-slate-100 rounded-sm bg-blue-100  text-slate-800 ${label ? 'text-lg' : 'text-2xl'} flex justify-center items-center`}>{label || answer || ''}</p>
-                <p className="text-slate-300">{odds}</p>
-            </div>
-            <div className='min-h-5 flex justify-between gap-1'>
-                {tokens.length > 0 && (
-                    <>
-                        <button disabled={userChips < 1} className={`py-1 px-2 bg-blue-500 text-blue-50 rounded flex-1 ${userChips < 1 ? 'opacity-50 hover:cursor-not-allowed' : ''}`} onClick={() => betChip(tokens[0]?.props.index, 1)}>+1</button>
-                        <button disabled={userChips < 5} className={`py-1 px-2 bg-blue-500 text-blue-50 rounded flex-1 ${userChips < 5 ? 'opacity-50 hover:cursor-not-allowed' : ''}`} onClick={() => betChip(tokens[0]?.props.index, 5)}>+5</button>
-                        <button disabled={userChips < 10} className={`py-1 px-2 bg-blue-500 text-blue-50 rounded flex-1 ${userChips < 10 ? 'opacity-50 hover:cursor-not-allowed' : ''}`} onClick={() => betChip(tokens[0]?.props.index, 10)}>+10</button>
-                    </>
-                )}
-
-            </div>
-            <div className='flex gap-1'>
-                {otherBets.map(([userId, bets], idx) => (
-                    <div className='py-1' key={userId}>
-                        {
-                            bets.map((bet, idx) => {
-                                if (bet.answer === answer) {
-                                    return <div key={userId + idx + 'bet'} className='w-2 h-2 rounded bg-slate-50' />
-                                } else return null;
-                            })
-                        }
-                    </div>
-                ))}
-            </div>
+            <AnswerCard
+                onDrop={onDrop}
+                tokens={tokens}
+                chips={chips}
+                label={label}
+                answer={answer}
+                otherBets={otherBets}
+                odds={odds}
+                userChips={userChips}
+            />
         </div>
     );
+}
+
+type CardProps = {
+    onDrop: (betIndex: number) => void,
+    tokens: (JSX.Element | null)[],
+    chips: number[],
+    label?: string,
+    answer?: string,
+    otherBets: [string, [Bet, Bet]][],
+    odds: string,
+    userChips: number
+}
+
+export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, odds, userChips }: CardProps) {
+    const { betChip } = useGame();
+    const [collectedProps, drop] = useDrop(() => ({
+        accept: 'token',
+        drop: (item: { idx: number }) => {
+            onDrop(item.idx)
+        }
+    }))
+
+    return (
+        <div className='grid gap-2'>
+            <div
+                ref={drop}
+                className={` ${!answer && 'opacity-30'} bg-slate-400 rounded flex flex-col justify-between items-center cursor-pointer w-40 h-60 relative`}
+            >
+                <div className="flex gap-3 w-full">
+                    <div className='px-1 py-2'>
+                        {tokens.map(token => token)}
+                    </div>
+                    <div className="w-full flex flex-wrap gap-3">
+                        {!!chips.length && chips.map((chips, idx) => <ChipStack key={`${answer}-chips-${idx}`} chips={chips} />)}
+                    </div>
+                </div>
+                <p className={`w-3/4 py-2 px-5 bg-amber-100 rounded-sm  text-slate-800 ${label ? 'text-lg' : 'text-2xl'} flex justify-center items-center shadow`}>{label || answer || ''}</p>
+                <div className='grid grid-cols-3 bg-slate-300 w-full rounded p-1'>
+                    <div></div>
+                    <p className="text-slate-100 bg-slate-500 text-center rounded">{odds}</p>
+                    <div>
+                        <div className='flex gap-1'>
+                            {otherBets.map(([userId, bets], idx) => (
+                                <div className='py-1' key={userId}>
+                                    {
+                                        bets.map((bet, idx) => {
+                                            if (bet.answer === answer) {
+                                                return <div key={userId + idx + 'bet'} className='w-2 h-2 rounded bg-slate-50' />
+                                            } else return null;
+                                        })
+                                    }
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className='h-7 my-1 flex justify-between gap-1'>
+                {tokens.length > 0 && (
+                    <>
+                        <button disabled={userChips < 1} className={`py-1 px-2 bg-blue-500 text-blue-50 rounded flex-1 text-xs whitespace-nowrap ${userChips < 1 ? 'opacity-50 hover:cursor-not-allowed' : ''}`} onClick={() => betChip(tokens[0]?.props.index, 1)}>+1 chip</button>
+                        <button disabled={userChips < 5} className={`py-1 px-2 bg-blue-500 text-blue-50 rounded flex-1 text-xs ${userChips < 5 ? 'opacity-50 hover:cursor-not-allowed' : ''}`} onClick={() => betChip(tokens[0]?.props.index, 5)}>+5</button>
+                        <button disabled={userChips < 10} className={`py-1 px-2 bg-blue-500 text-blue-50 rounded flex-1 text-xs ${userChips < 10 ? 'opacity-50 hover:cursor-not-allowed' : ''}`} onClick={() => betChip(tokens[0]?.props.index, 10)}>+10</button>
+                    </>
+                )}
+            </div>
+        </div>
+    )
 }
 
 function splitChipsIntoGroups(chips: number): number[] {

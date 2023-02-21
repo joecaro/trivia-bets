@@ -16,24 +16,20 @@ export default function Question() {
         submitAnswer(answer)
     }
     return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="flex gap-3">
-                {users.map(user => (
-                    gameState?.currentAnswers?.answers?.[user.id] ? (
-                        <p key={`answer-${user.id}`} className="text-xl font-bold text-slate-100">{user.name}</p>
-                    ) : (
-                        <p key={`answer-${user.id}`} className="text-xl font-bold text-slate-500">{user.name}</p>
-                    )
-                ))}
-            </div>
-
-            <p>
+        <div className="flex flex-col gap-8 items-center justify-center">
+            <p className="text-slate-500 font-bold">
+                question {gameState?.currentQuestionIndex || 0} of 10
+            </p>
+            <p className="max-w-lg text-center text-lg font-bold text-slate-700">
                 {questions[gameState?.currentQuestionIndex || 0].question}
             </p>
-            <div className="p-5 flex gap-2">
-                <input className="p-2 border-slate-200 border rounded bg-slate-700" type='number' value={answer} onChange={handleAnswerChange} />
+            <div className="py-1 px-2 rounded bg-slate-500 text-slate-50">
+               ⏲ 49s left
+            </div>
+            <div className="flex gap-2">
+                <input className="p-2 border-slate-400 border rounded" type='number' value={answer} onChange={handleAnswerChange} />
                 <button
-                    className="py-2 px-4 border-slate-200 border rounded shadow-sm"
+                    className="py-2 px-4 bg-blue-500 text-slate-50 border rounded shadow-sm"
                     onClick={handleSubmit}>Submit</button>
             </div>
         </div>

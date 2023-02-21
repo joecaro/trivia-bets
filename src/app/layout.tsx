@@ -11,14 +11,8 @@ export default function RootLayout({
   return (
     <html>
       <head />
-      <body className='flex items-stretch justify-center bg-slate-600 text-slate-50'>
-        <SocketProvider>
-          <GameProvider>
-            <DragProvider>
-              {children}
-            </DragProvider>
-          </GameProvider>
-        </SocketProvider>
+      <body className='flex items-stretch justify-center'>
+        {children}
       </body>
     </html>
   )

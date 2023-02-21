@@ -1,7 +1,8 @@
 'use client'
 
 import React from "react";
-import AnswerSpot from "../../components/AnswerSpot";
+import AnswerSpot, { AnswerCard } from "../../components/AnswerSpot";
+import BetResult from "../../components/BetResult";
 import Chip from "../../components/Chip";
 import ChipStack from "../../components/ChipStack";
 import Player from "../../components/Player";
@@ -34,13 +35,13 @@ export default function Page() {
                 Components
             </h1>
             <Container>
-                <Player name="NAME" image="IMAGE" score={0} />
+                <Player name="NAME" id='1asd2' image="IMAGE" score={0} />
             </Container>
             <Container>
                 <div className="flex gap-2 justify-between">
                     {
                         PLAYERS.map((name, i) => (
-                            <Player key={name} name={name} image="IMAGE" score={0} />
+                            <Player key={name} id='1asd2' name={name} image="IMAGE" score={0} />
                         ))
                     }
                 </div>
@@ -62,10 +63,19 @@ export default function Page() {
                 </div>
             </Container>
             <Container>
-                <Token token="hslfj" index={1234} />
+            <AnswerCard
+                    onDrop={console.log}
+                    tokens={[<Token key={'yeppy'} token='wejjs' index={123}/>, <Token key={'ppy'} token='wejjs' index={123}/>]}
+                    chips={[]}
+                    label='label'
+                    answer='answer'
+                    otherBets={[]}
+                    odds='2-1'
+                    userChips={0}
+                />
             </Container>
             <Container>
-                <Chip num={1}/>
+                <Token token="hslfj" index={1234} />
             </Container>
             <Container>
                 <ChipStack chips={10}/>
@@ -74,6 +84,11 @@ export default function Page() {
                 <ChipStack chips={3}/>
                 <ChipStack chips={2}/>
                 <ChipStack chips={1}/>
+            </Container>
+            <Container>
+                <BetResult answer="13" bet={{ answer: '13', bet: 1, odds: 2, payout: 3 }} />
+                <BetResult answer="13" bet={{ answer: '12', bet: 100, odds: 2, payout: 3 }} />
+                <BetResult answer="13" bet={{ answer: '14', bet: 1, odds: 2, payout: 3 }} />
             </Container>
         </div>
     )

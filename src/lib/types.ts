@@ -1,5 +1,3 @@
-import { Question, User } from "./classes";
-
 const STAGE_MAP = {
     "lobby": "lobby",
     "question": "question",
@@ -8,26 +6,40 @@ const STAGE_MAP = {
     "finished": "finished"
 }
 
+export type Question = {
+    question: string,
+    answer: string[],
+}
+
+export type User = {
+    id: string,
+    name: string,
+    chips: number,
+    active: boolean,
+}
+
 export type UserId = string;
 
 export type AnswerGroup = {
-    answers: { [userId: string]: {
-        answer: string,
-        isCorrect: boolean
-    } },
+    answers: {
+        [userId: string]: {
+            answer: string,
+            isCorrect: boolean
+        }
+    },
     closestAnswer: {
         userId: string,
         answer: string
     }
 }
 
-export type Bet ={
+export type Bet = {
     answer: string | null,
-    chips: number
+    chips: number,
     payout: number
 }
 export type BetGroup = {
-    [userId: string]:  [Bet, Bet]
+    [userId: string]: [Bet, Bet]
 }
 
 export type Round = {

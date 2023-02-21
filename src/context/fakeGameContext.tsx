@@ -1,9 +1,7 @@
 "use client"
 
 import { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Question, User } from "../lib/classes";
-import { triviaQuestions } from "../lib/questions";
-import { AnswerGroup, Bet, GameState } from "../lib/types";
+import { AnswerGroup, Bet, GameState, Question, User } from "../lib/types";
 import { useSocket } from "./socketContext";
 
 export interface IGameContext {
@@ -40,7 +38,7 @@ const FakeGameProvider = ({ children }: { children: ReactNode }) => {
     const [users, setUsers] = useState<User[]>([]);
     const [gameId, setGameId] = useState('')
     const [stage, setStage] = useState<IGameContext['stage']>('lobby')
-    const [questions, setQuestions] = useState<IGameContext['questions']>(triviaQuestions.map((q, i) => new Question(q.question, q.answer)))
+    const [questions, setQuestions] = useState<IGameContext['questions']>([])
     const [gameState, setGameState] = useState<Partial<GameState> | null>(null)
     const userBets =gameState?.currentBets?.me || defaultBets;
 

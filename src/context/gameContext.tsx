@@ -2,8 +2,7 @@
 
 import { Router, useRouter } from "next/router";
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import { Question, User } from "../lib/classes";
-import { Bet, GameState } from "../lib/types";
+import { Bet, GameState, Question, User } from "../lib/types";
 import { useSocket } from "./socketContext";
 
 export interface IGameContext {

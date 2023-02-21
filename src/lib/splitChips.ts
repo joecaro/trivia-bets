@@ -1,11 +1,5 @@
 type Size = 'fives' | 'tens' | 'twenties' | 'forties';
 
-interface Cutoffs {
-    normal: Record<Size, number>;
-    condensed: Record<Size, number>;
-    values: Record<Size, number>;
-}
-
 const cutoffs = {
     normal: {
         fives: 4,

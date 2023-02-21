@@ -3,7 +3,6 @@
 import React from "react";
 import AnswerSpot, { AnswerCard } from "../../components/AnswerSpot";
 import BetResult from "../../components/BetResult";
-import Chip from "../../components/Chip";
 import ChipStack from "../../components/ChipStack";
 import Player from "../../components/Player";
 import QuestionProgress from "../../components/QuestionProgress";

@@ -6,7 +6,7 @@ export default function JoinLink() {
     const { gameId: id } = useGame();
     const [copied, setCopied] = useState(false);
 
-    const link = `${socketIp}:3000/game?joinId=${id}`
+    const link = `${socketIp}/game?joinId=${id}`
     const copyLink = () => {
         navigator.clipboard.writeText(link);
         setCopied(true);

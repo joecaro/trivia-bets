@@ -13,6 +13,9 @@ export default function Tally() {
     if (!gameState || !bets || !answers) return (<div></div>)
 
     const payout = (answer: string) => {
+
+        if (answer === 'none') return 5;
+
         const ansArray = Object.values(answers.answers || {});
         const ansIdx = ansArray.findIndex(ans => ans.answer === answer)
         const middle = ansArray.length % 2 === 0 ? ansArray.length / 2 : (ansArray.length - 1) / 2;

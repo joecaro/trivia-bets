@@ -1,7 +1,4 @@
 import '../../global.css'
-import DragProvider from '../context/DndContext'
-import GameProvider from '../context/gameContext'
-import SocketProvider from '../context/socketContext'
 
 export default function RootLayout({
   children,

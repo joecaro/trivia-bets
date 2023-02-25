@@ -59,3 +59,11 @@ export interface GameState {
     allRounds: Round[];
     stage: keyof typeof STAGE_MAP;
 };
+
+export declare type Chips = {
+    fifty: number,
+    twenty: number,
+    ten: number,
+    five: number,
+    one: number,
+}

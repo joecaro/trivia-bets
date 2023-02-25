@@ -1,42 +1,40 @@
-type Size = 'fives' | 'tens' | 'twenties' | 'forties';
+import { Chips } from "./types";
 
-const cutoffs = {
-    normal: {
-        fives: 4,
-        tens: 4,
-        twenties: 4,
-        forties: Infinity
-    },
-    condensed: {
-        fives: 1,
-        tens: 1,
-        twenties: 2,
-        forties: Infinity
-    },
-    values: {
-        fives: 5,
-        tens: 10,
-        twenties: 20,
-        forties: 40
-    }
+const CHIPS: number[] = [
+    50,
+    20,
+    10,
+    5,
+]
+
+const chipNameMap = {
+    50: 'fifty',
+    20: 'twenty',
+    10: 'ten',
+    5: 'five',
+    1: 'one',
 }
 
-export default function splitChipsIntoGroups(chips: number, format: 'normal' | 'condensed' = 'normal'): number[] {
+export default function splitChipsIntoGroups(chips: number): Chips {
     let remainder = chips
-    const groups: Record<Size, number[]> = {
-        fives: [],
-        tens: [],
-        twenties: [],
-        forties: []
+    const chipsGroups = {
+        fifty: 0,
+        twenty: 0,
+        ten: 0,
+        five: 0,
+        one: 0,
     }
 
-    for (const [groupSize, groupCutoff] of Object.entries(cutoffs[format])) {
-        const size = groupSize as Size;
-        while (remainder > cutoffs.values[size] && groups[size].length < groupCutoff) {
-            groups[size].push(cutoffs.values[size]);
-            remainder -= cutoffs.values[size];
+    for (const chip of CHIPS) {
+        while (remainder >= chip) {
+            chipsGroups[chipNameMap[chip as keyof typeof chipNameMap] as keyof typeof chipsGroups] += 1;
+            remainder -= chip;
         }
     }
 
-    return Object.values(groups).flat().concat(remainder);
+    if (remainder > 0) {
+        chipsGroups.one = remainder
+    }
+
+    return chipsGroups;
 }

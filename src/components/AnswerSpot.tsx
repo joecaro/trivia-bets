@@ -5,7 +5,7 @@ import { useDrop } from 'react-dnd'
 import { useGame } from "../context/gameContext";
 import { useSocket } from "../context/socketContext";
 import splitChipsIntoGroups from '../lib/splitChips';
-import { Bet } from '../lib/types';
+import { Bet, Chips } from '../lib/types';
 import ChipStack from './ChipStack';
 import Token from "./Token";
 
@@ -62,7 +62,7 @@ export default function AnswerSpot({
 type CardProps = {
     onDrop: (betIndex: number) => void,
     tokens: (JSX.Element | null)[],
-    chips: number[],
+    chips: Chips,
     label?: string,
     answer?: string,
     otherBets: [string, [Bet, Bet]][],
@@ -89,8 +89,14 @@ export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, od
                     <div className='px-1 py-2'>
                         {tokens.map(token => token)}
                     </div>
-                    <div className="w-full flex flex-wrap gap-1">
-                        {!!chips.length && chips.map((chips, idx) => <ChipStack key={`${answer}-chips-${idx}`} chips={chips} />)}
+                    <div className="w-full flex flex-wrap justify-center gap-1">
+                        {Object.entries(chips).map(([chip, amount], idx) => (
+                            <ChipStack
+                                key={`user-bet-${chip}-${idx}-${answer}`}
+                                chips={amount}
+                                type={chip as keyof Chips}
+                            />
+                        ))}
                     </div>
                 </div>
                 <div className='flex flex-col w-full flex-1 justify-center items-center'>

@@ -12,7 +12,16 @@ import DragProvider from "../../context/DndContext";
 import GameSettings from "./(GameSettings)";
 import splitChipsIntoGroups from "../../lib/splitChips";
 import ErrorModal from "./(ErrorModal)";
+import { Chips } from "../../lib/types";
 
+
+const chipDisplay = {
+    one: 1,
+    five: 5,
+    ten: 10,
+    twenty: 20,
+    fifty: 50,
+}
 
 export default function GamePage({
     children,
@@ -35,11 +44,12 @@ export default function GamePage({
     )
 }
 
-function PageLayout({ children }: { children: React.ReactNode}) {
+function PageLayout({ children }: { children: React.ReactNode }) {
     const { socket } = useSocket();
     const { gameState, stage, users, userBets } = useGame()
 
     const user = gameState?.users?.find(user => user.id === socket.id);
+    const isHost = gameState?.users?.[0].id === socket.id;
     const chipGroups = splitChipsIntoGroups(user?.chips || 0)
 
     return (
@@ -47,10 +57,10 @@ function PageLayout({ children }: { children: React.ReactNode}) {
             <div className="grid grid-cols-4 gap-y-2">
                 <JoinLink />
                 <QuestionProgress currentQuestion={gameState?.currentQuestionIndex || 0} totalQuestions={10} />
-               <GameSettings />
+                <GameSettings />
             </div>
             <div className='flex flex-col items-center gap-6'>
-                {stage === 'bets' ? <p>Bets: {JSON.stringify(userBets)}</p> : null}
+                {isHost && stage === 'bets' ? <p>Bets: {JSON.stringify(userBets)}</p> : null}
                 <div className='flex flex-col w-full'>
                     {children}
                 </div>
@@ -64,7 +74,7 @@ function PageLayout({ children }: { children: React.ReactNode}) {
                     }
                 </div>
                 <div className="flex gap-3">
-                    <div>
+                    <div className="flex gap-1">
                         {!userBets[0].answer ? (
                             <Token index={0} token="123" />
                         ) : null}
@@ -73,9 +83,14 @@ function PageLayout({ children }: { children: React.ReactNode}) {
                         ) : null}
                     </div>
                     <div className="grid grid-cols-5 relative">
-                        {!!chipGroups.length ? chipGroups.map((group, i) => (
-                            <ChipStack key={i} chips={group} />
-                        )) : null}
+                        {
+                            Object.entries(chipGroups).map(([key, value], i) => (
+                                <div className="border border-slate-200 h-16 w-10 grid" key={"user-chips" + key}>
+                                    <span className="text-slate-400">{chipDisplay[key as keyof typeof chipDisplay]}</span>
+                                    <ChipStack type={key as keyof Chips} chips={value} />
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
             </div>

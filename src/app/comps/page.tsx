@@ -66,7 +66,7 @@ export default function Page() {
             <AnswerCard
                     onDrop={console.log}
                     tokens={[<Token key={'yeppy'} token='wejjs' index={123}/>, <Token key={'ppy'} token='wejjs' index={123}/>]}
-                    chips={splitChipsIntoGroups(100, 'condensed')}
+                    chips={splitChipsIntoGroups(135)}
                     label='label'
                     answer='answer'
                     otherBets={[]}
@@ -76,7 +76,7 @@ export default function Page() {
             <AnswerCard
                     onDrop={console.log}
                     tokens={[<Token key={'yeppy'} token='wejjs' index={123}/>, <Token key={'ppy'} token='wejjs' index={123}/>]}
-                    chips={[]}
+                    chips={splitChipsIntoGroups(0)}
                     label='label'
                     answer='answer'
                     otherBets={[]}
@@ -88,12 +88,12 @@ export default function Page() {
                 <Token token="hslfj" index={1234} />
             </Container>
             <Container>
-                <ChipStack chips={10}/>
-                <ChipStack chips={5}/>
-                <ChipStack chips={4}/>
-                <ChipStack chips={3}/>
-                <ChipStack chips={2}/>
-                <ChipStack chips={1}/>
+                <ChipStack chips={10} type='fifty' />
+                <ChipStack chips={5} type='ten' />
+                <ChipStack chips={4} type='five' />
+                <ChipStack chips={3} type='five' />
+                <ChipStack chips={2} type='twenty' />
+                <ChipStack chips={1} type='twenty' />
             </Container>
             <Container>
                 <BetResult answer="13" bet={{ answer: '13', bet: 1, odds: 2, payout: 3 }} />

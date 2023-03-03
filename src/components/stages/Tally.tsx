@@ -101,12 +101,12 @@ export default function Tally() {
 
 
                         return (
-                            <div key={user.id} className="w-3/4 max-w-3xl flex justify-around">
-                                <div>
+                            <div key={user.id} className="w-full max-w-3xl grid grid-cols-3 gap-1 my-4">
+                                <div className="">
                                     <p>{user.name}</p>
                                 </div>
-                                <BetResult verbose={false} answer={closestAnswer} bet={bet1} />
-                                <BetResult verbose={false} answer={closestAnswer} bet={bet2} />
+                                <BetResult className="justify-center" verbose={false} answer={closestAnswer} bet={bet1} />
+                                <BetResult className="justify-center" verbose={false} answer={closestAnswer} bet={bet2} />
                             </div>
                         )
                     })

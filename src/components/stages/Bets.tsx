@@ -1,15 +1,21 @@
 'use client'
 
 import equal from "fast-deep-equal";
+import { useMemo } from "react";
 import { useSocket } from "../../context/socketContext";
 import { useTimer } from "../../context/timerContext";
-import useGameStore from "../../zustand/gameStore";
+import { BetGroup } from "../../lib/types";
+import useGameStore, { defaultBets, setUserBets } from "../../zustand/gameStore";
 import AnswerSpot from "../AnswerSpot";
 
 export default function Bets() {
+    const { socket } = useSocket();
     const currentAnswers = useGameStore(state => state.currentAnswers, (a, b) => equal(a, b))
     const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
+    const currentBets = useGameStore(state => state.currentBets, (a, b) => equal(a, b))
     const questions = useGameStore(state => state.questions)
+
+    const userBets = useMemo(() => socket.id ? currentBets[socket.id] || defaultBets : defaultBets, [currentBets, socket]);
 
     const { bet } = useSocket();
 
@@ -27,6 +33,14 @@ export default function Bets() {
         ? index < middle ? middle - index + 1 : index - middle + 2
         : Math.abs(middle - index) + 2
 
+    const composeBet = (answer: string, odds: number, ) => {
+        return (betIdx: number) => {
+            const betDup = [...userBets]
+            betDup[betIdx] = { answer, payout: odds, chips: betDup[betIdx].chips }
+            setUserBets([betDup[0], betDup[1]])
+            bet(answer, odds, betIdx)
+        }
+    }
     return (
         <div className="flex flex-col gap-8 items-center justify-center">
             <p className="max-w-lg text-center text-lg font-bold text-slate-700 mb-4">
@@ -40,7 +54,7 @@ export default function Bets() {
                 {even ?
                     <>
                         {answers.slice(0, middle).map(([userId, answer], i) => (
-                            <AnswerSpot key={answer.answer} answer={answer.answer} onDrop={(betIdx) => bet(answer.answer, payout(i), betIdx)} odds={`${(payout(i)).toString()}-1`} />
+                            <AnswerSpot key={answer.answer} answer={answer.answer} onDrop={composeBet(answer.answer, payout(i))} odds={`${(payout(i)).toString()}-1`} />
                         ))}
                         <AnswerSpot onDrop={(betIdx) => { }} odds={`2-1`} />
                         {answers.slice(middle).map(([userId, answer], i) => (

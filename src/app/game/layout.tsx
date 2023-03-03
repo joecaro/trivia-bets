@@ -13,8 +13,9 @@ import splitChipsIntoGroups from "../../lib/splitChips";
 import ErrorModal from "./(ErrorModal)";
 import { Chips } from "../../lib/types";
 import TimerProvider from "../../context/timerContext";
-import useGameStore from '../../zustand/gameStore';
+import useGameStore, { defaultBets } from '../../zustand/gameStore';
 import equal from 'fast-deep-equal';
+import { useMemo } from 'react';
 
 
 const chipDisplay = {
@@ -51,7 +52,10 @@ function PageLayout({ children }: { children: React.ReactNode }) {
     const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
     const stage = useGameStore(state => state.stage)
     const users = useGameStore(state => state.users, (a, b) => equal(a, b))
-    const userBets = useGameStore(state => state.userBets, (a, b) => equal(a, b))
+    const currentBets = useGameStore(state => state.currentBets, (a, b) => equal(a, b))
+
+    const userBets = useMemo(() => socket.id ? currentBets[socket.id] || defaultBets : defaultBets, [currentBets, socket]);
+
 
     const user = users?.find(user => user.id === socket.id);
     const isHost = users?.[0]?.id === socket.id;

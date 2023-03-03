@@ -33,7 +33,7 @@ const initialState: IGameContext = {
     error: null,
 }
 
-const useGameStore = create<IGameContext & {reset: () => void}>()((set) => ({ ...initialState, reset: () => set(initialState) }))
+const useGameStore = create<IGameContext & { reset: () => void }>()((set) => ({ ...initialState, reset: () => set(initialState) }))
 
 // ACTIONS
 export const setGameState = (gameState: Partial<GameState>) => useGameStore.setState({ gameState })
@@ -50,11 +50,6 @@ export const setAllRounds = (allRounds: Round[]) => useGameStore.setState({ allR
 export const setError = (error: string | null) => useGameStore.setState({ error })
 export const dismissError = () => useGameStore.setState({ error: null })
 
-// const [firstName, updateFirstName] = useGameStore(
-//     (state) => [state.firstName, state.updateFirstName],
-//     shallow
-// )
-
 export default useGameStore;
 
 // UTILS
@@ -64,19 +59,19 @@ export const storeGame = (gameId: string, socketId: string) => {
 
 export function selectiveUpdate(newState: Partial<GameState>, socketId: string) {
     setGameState(newState)
-    newState.currentQuestionIndex && setCurrentQuestionIndex(newState.currentQuestionIndex);
-    newState.users && setUsers(newState.users)
-    newState.stage && setStage(newState.stage)
-    newState.questions && setQuestions(newState.questions)
-    newState._id && setGameId(newState._id)
-    newState.currentAnswers && setCurrentAnswers(newState.currentAnswers)
-    newState.currentBets && setCurrentBets(newState.currentBets)
-    newState.rounds && setRounds(newState.rounds)
-    newState.allRounds && setAllRounds(newState.allRounds)
-    storeGame(newState._id || '', socketId)
+    if (newState) {
+        newState.currentQuestionIndex && setCurrentQuestionIndex(newState.currentQuestionIndex);
+        newState.users && setUsers(newState.users)
+        newState.stage && setStage(newState.stage)
+        newState.questions && setQuestions(newState.questions)
+        newState._id && setGameId(newState._id)
+        newState.currentAnswers && setCurrentAnswers(newState.currentAnswers)
+        newState.currentBets && setCurrentBets(newState.currentBets)
+        newState.rounds && setRounds(newState.rounds)
+        newState.allRounds && setAllRounds(newState.allRounds)
+        storeGame(newState._id || '', socketId)
+    }
 }
-
-// const userBets = useMemo(() => socket?.id ? currentBets[socket.id] || defaultBets : defaultBets, [currentBets, socket]);
 
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 

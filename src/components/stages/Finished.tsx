@@ -1,6 +1,5 @@
 'use client'
 
-import { SyntheticEvent, useState } from "react"
 import { Line } from "react-chartjs-2"
 import {
     Chart as ChartJS,
@@ -12,7 +11,8 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import { useGame } from "../../context/gameContext"
+import useGameStore from "../../zustand/gameStore";
+import equal from "fast-deep-equal";
 
 ChartJS.register(
     CategoryScale,
@@ -38,9 +38,10 @@ export const options = {
 };
 
 export default function Finished() {
-    const { gameState, users } = useGame()
+    const users = useGameStore((state) => state.users, (a, b) => equal(a, b));
+    const allRounds = useGameStore((state) => state.allRounds, (a, b) => equal(a, b));
 
-    const labels = gameState?.allRounds?.map((round, idx) => `Round ${idx + 1}`) || []
+    const labels = allRounds?.map((round, idx) => `Round ${idx + 1}`) || []
 
     const data = {
         labels,
@@ -48,7 +49,7 @@ export default function Finished() {
             const randomDegree = Math.floor(Math.random() * 360)
             return {
                 label: user.name,
-                data: gameState?.allRounds?.map(round => round.scores[user.id]),
+                data: allRounds?.map(round => round.scores[user.id]),
                 borderColor: `hsl(${randomDegree}, 100%, 50%)`,
                 backgroundColor: `hsla(${randomDegree}, 100%, 50%, 0.5)`
             }

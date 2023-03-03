@@ -3,6 +3,7 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { GameState } from "../lib/types";
+import { selectiveUpdate, setError, storeGame } from "../zustand/gameStore";
 
 export const socketIp = process.env.NEXT_PUBLIC_WS_URL;
 
@@ -21,23 +22,42 @@ type CTSEventMap = {
     'unregister': () => void,
     'nextStage': () => void,
     'submitAnswer': (answer: string) => void,
-    'bet': (answer: string, payout: number, betIdx:  number) => void,
+    'bet': (answer: string, payout: number, betIdx: number) => void,
     'betChip': (betIdx: number, amount: number) => void,
     'newGame': () => void,
+    'destroyGame': () => void,
 }
 
-const socket = io(socketIp || 'https://localhost:8080');
+export const socket = io(socketIp || 'https://localhost:8080');
 
-
-const SocketContext = createContext<{
+export type SocketContextProps = {
     socket: Socket<STCEventMap, CTSEventMap>,
-    storeGame: (gameId: string) => void
-}>({ socket: socket, storeGame: () => { } })
+    create: (user: string) => void,
+    register: (username: string, gameToJoin: string) => void,
+    unregister: () => void,
+    nextStage: () => void,
+    submitAnswer: (answer: string) => void,
+    bet: (answer: string, payout: number, betIdx: number) => void,
+    betChip: (betIdx: number, amount: number) => void,
+    newGame: () => void,
+    destroyGame: () => void,
+}
+
+
+const SocketContext = createContext<SocketContextProps>({
+    socket: socket,
+    create: () => { },
+    register: () => { },
+    unregister: () => { },
+    nextStage: () => { },
+    submitAnswer: () => { },
+    bet: () => { },
+    betChip: () => { },
+    newGame: () => { },
+    destroyGame: () => { },
+})
 
 const SocketProvider = ({ children }: { children: ReactNode }) => {
-    const storeGame = useCallback((gameId: string) => {
-        localStorage.setItem('gameId', JSON.stringify({ gameId, id: socket.id}));
-    }, [])
 
     const retrieveGame = useCallback(() => {
         const storedGame = localStorage.getItem('gameId');
@@ -47,6 +67,61 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
             socket.emit('reconnect', id, gameId);
         }
     }, [])
+
+    const create = useCallback((user: string) => {
+        if (socket) {
+            socket.emit('create', user);
+        }
+    }, [])
+
+    const register = useCallback((username: string, gameToJoin: string) => {
+        if (socket) {
+            socket.emit('register', username, gameToJoin);
+            storeGame(gameToJoin, socket.id)
+        }
+    }, [])
+
+    const unregister = useCallback(() => {
+        if (socket) {
+            socket.emit('unregister');
+        }
+    }, [])
+
+    const nextStage = useCallback(() => {
+        if (socket) {
+            socket.emit('nextStage')
+        }
+    }, [])
+
+    const submitAnswer = useCallback((answer: string) => {
+        if (socket) {
+            socket.emit('submitAnswer', answer)
+        }
+    }, [])
+
+    const bet = useCallback((answer: string, payout: number, betIdx: number) => {
+        if (socket) {
+            socket.emit('bet', answer, payout, betIdx)
+        }
+    }, [])
+
+    const betChip = useCallback((betIdx: number, amount: number = 1) => {
+
+        if (socket) {
+            socket.emit('betChip', betIdx, amount)
+        }
+    }, [])
+
+    const newGame = useCallback(() => {
+        socket.emit('newGame');
+    }, [])
+
+    const destroyGame = useCallback(() => {
+        if (socket) {
+            socket.emit('destroyGame');
+        }
+    }, [])
+
 
     useEffect(() => {
         if (socket) {
@@ -64,8 +139,45 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [retrieveGame])
 
+    useEffect(() => {
+
+        if (socket) {
+            socket.on('gameState', (state) => {
+                console.group('gameState event')
+                console.log({ state });
+                console.groupEnd();
+                selectiveUpdate(state, socket.id);
+            });
+        }
+
+        socket.on('noReconnect', () => {
+            console.log('No reconnect');
+        });
+
+        socket.on('noGame', () => {
+            setError('No game found');
+        });
+
+        return () => {
+            if (socket) {
+                socket.off('gameState');
+            }
+        }
+    }, []);
+
     return (
-        <SocketContext.Provider value={{ socket, storeGame }}>
+        <SocketContext.Provider value={{
+            socket,
+            create,
+            register,
+            unregister,
+            nextStage,
+            submitAnswer,
+            bet,
+            betChip,
+            newGame,
+            destroyGame,
+        }}>
             {children}
         </SocketContext.Provider>
     )

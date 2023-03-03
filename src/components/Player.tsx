@@ -1,4 +1,5 @@
-import { useGame } from "../context/gameContext"
+import equal from "fast-deep-equal";
+import useGameStore from "../zustand/gameStore";
 
 type PlayerProps = {
     name: string,
@@ -13,9 +14,10 @@ export default function Player({
     image,
     score,
 }: PlayerProps) {
-    const { gameState } = useGame();
+    const stage = useGameStore(state => state.stage)
+    const currentAnswers = useGameStore(state => state.currentAnswers, (a, b) => equal(a, b))
 
-    const isFaded = gameState?.stage === 'question' && !gameState?.currentAnswers?.answers?.[id]
+    const isFaded = stage === 'question' && currentAnswers?.answers?.[id]
 
     return (
         <div className={`flex gap-5 items-center bg-slate-300 border border-slate-500 rounded px-1 py-1 ${isFaded ? 'opacity-50' : ''}`}>

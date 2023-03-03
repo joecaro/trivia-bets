@@ -1,7 +1,12 @@
+'use client'
+
 import Head from 'next/head'
 import Link from 'next/link'
+import { useState } from 'react'
 
 export default function Home() {
+  const [value, setValue] = useState('');
+
   return (
     <div className='h-full flex flex-col justify-center items-center p-5'>
       <Head>
@@ -11,7 +16,13 @@ export default function Home() {
       </Head>
 
       <main >
-          <Link href='/game' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Play Game</Link>
+        <div className='flex flex-col gap-5'>
+          <Link href='/game' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full text-center'>Host Game</Link>
+          <div className='flex gap-1'>
+            <input className='border rounded p-1' value={value} onChange={e => setValue(e.target.value)} placeholder="Game ID" />
+            <Link href={`/game?joinId=${value}`} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Join Game</Link>
+          </div>
+        </div>
       </main>
     </div>
   )

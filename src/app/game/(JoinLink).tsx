@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useGame } from "../../context/gameContext";
+import useGameStore from "../../zustand/gameStore";
 import { socketIp } from "../../context/socketContext";
 
 export default function JoinLink() {
-    const { gameId: id } = useGame();
+    const id = useGameStore(state => state.gameId)
     const [copied, setCopied] = useState(false);
 
     const link = `https://triviabets.vercel.app/game?joinId=${id}`

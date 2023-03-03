@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react"
-import { IGameContext } from "../../context/gameContext"
+import { SocketContextProps } from "../../context/socketContext"
 
 const me = {
     name: 'Player 1',
@@ -7,8 +7,8 @@ const me = {
 }
 export default function JoinModal ({ show, onCreate, onJoin, onClose, joinId }
     : { show: boolean, 
-        onCreate: IGameContext['create'],
-        onJoin: IGameContext['register'], 
+        onCreate: SocketContextProps['create'],
+        onJoin: SocketContextProps['register'], 
         onClose: () => void 
         joinId: string | null
     }) {

@@ -1,15 +1,21 @@
 'use client'
 
-import { useEffect, useState } from "react";
-import { useGame } from "../../context/gameContext"
+import equal from "fast-deep-equal";
+import { useSocket } from "../../context/socketContext";
 import { useTimer } from "../../context/timerContext";
+import useGameStore from "../../zustand/gameStore";
 import AnswerSpot from "../AnswerSpot";
 
 export default function Bets() {
-    const { gameState, bet, questions } = useGame()
+    const currentAnswers = useGameStore(state => state.currentAnswers, (a, b) => equal(a, b))
+    const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
+    const questions = useGameStore(state => state.questions)
+
+    const { bet } = useSocket();
+
     const { timer } = useTimer()
 
-    const answers = Object.entries(gameState?.currentAnswers?.answers || {})
+    const answers = Object.entries(currentAnswers?.answers || {})
 
     answers.sort((a, b) => parseInt(a[1].answer) - parseInt(b[1].answer))
 
@@ -24,7 +30,7 @@ export default function Bets() {
     return (
         <div className="flex flex-col gap-8 items-center justify-center">
             <p className="max-w-lg text-center text-lg font-bold text-slate-700 mb-4">
-                {questions[gameState?.currentQuestionIndex || 0].question}
+                {questions[currentQuestionIndex || 0].question}
             </p>
             <div className="py-1 px-2 rounded bg-slate-500 text-slate-50">
                 {timer ? `⏲ ${timer}s left` : '...'}

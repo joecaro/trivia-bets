@@ -1,12 +1,18 @@
 'use client'
 
 import { SyntheticEvent, useState } from "react"
-import { useGame } from "../../context/gameContext"
+import { useSocket } from "../../context/socketContext"
 import { useTimer } from "../../context/timerContext"
+import useGameStore from "../../zustand/gameStore"
 
 export default function Question() {
     const [answer, setAnswer] = useState('')
-    const { gameState, questions, submitAnswer, users } = useGame()
+    
+    const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
+    const questions = useGameStore(state => state.questions)
+
+    const { submitAnswer } = useSocket()
+
     const { timer } = useTimer()
 
     const handleAnswerChange = (e: SyntheticEvent<HTMLInputElement>) => {
@@ -20,10 +26,10 @@ export default function Question() {
     return (
         <div className="flex flex-col gap-8 items-center justify-center">
             <p className="text-slate-500 font-bold">
-                question {gameState?.currentQuestionIndex || 0} of 10
+                question {currentQuestionIndex || 0} of 10
             </p>
             <p className="max-w-lg text-center text-lg font-bold text-slate-700">
-                {questions[gameState?.currentQuestionIndex || 0].question}
+                {questions[currentQuestionIndex || 0].question}
             </p>
             <div className="py-1 px-2 rounded bg-slate-500 text-slate-50">
                {timer ? `⏲ ${timer}s left` : '...'}

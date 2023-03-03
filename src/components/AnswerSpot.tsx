@@ -1,11 +1,12 @@
 'use client';
+import equal from 'fast-deep-equal';
 import { useMemo } from 'react';
 import { useDrop } from 'react-dnd'
 
-import { useGame } from "../context/gameContext";
 import { useSocket } from "../context/socketContext";
 import splitChipsIntoGroups from '../lib/splitChips';
 import { Bet, Chips } from '../lib/types';
+import useGameStore, { defaultBets } from '../zustand/gameStore';
 import ChipStack from './ChipStack';
 import Token from "./Token";
 
@@ -22,11 +23,14 @@ export default function AnswerSpot({
     onDrop,
     odds
 }: AnswerSpotProps) {
-    const { userBets, gameState } = useGame()
+    const users = useGameStore(state => state.users, (a, b) => equal(a, b))
+    const currentBets = useGameStore(state => state.currentBets, (a, b) => equal(a, b))
     const { socket } = useSocket();
 
+    const userBets = useMemo(() => socket.id ? currentBets[socket.id] || defaultBets : defaultBets, [currentBets, socket]);
 
-    const userChips = gameState?.users?.find(user => user.id === socket.id)?.chips || 0;
+
+    const userChips = users?.find(user => user.id === socket.id)?.chips || 0;
 
     const tokens = userBets.map((bet, idx) => {
         if (bet.answer === answer) {
@@ -41,7 +45,7 @@ export default function AnswerSpot({
     }, [userBets, answer])
 
 
-    const otherBets = Object.entries(gameState?.currentBets || {}).filter(bet => bet[0] !== socket.id)
+    const otherBets = Object.entries(currentBets || {}).filter(bet => bet[0] !== socket.id)
 
     return (
         <div>
@@ -71,7 +75,7 @@ type CardProps = {
 }
 
 export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, odds, userChips }: CardProps) {
-    const { betChip } = useGame();
+    const { betChip } = useSocket();
     const [collectedProps, drop] = useDrop(() => ({
         accept: 'token',
         drop: (item: { idx: number }) => {

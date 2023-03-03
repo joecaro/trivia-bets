@@ -1,6 +1,5 @@
 'use client'
 
-import GameProvider, { useGame } from "../../context/gameContext"
 import { useRouter } from 'next/navigation';
 import JoinLink from "./(JoinLink)"
 import SocketProvider, { useSocket } from "../../context/socketContext"
@@ -14,6 +13,8 @@ import splitChipsIntoGroups from "../../lib/splitChips";
 import ErrorModal from "./(ErrorModal)";
 import { Chips } from "../../lib/types";
 import TimerProvider from "../../context/timerContext";
+import useGameStore from '../../zustand/gameStore';
+import equal from 'fast-deep-equal';
 
 
 const chipDisplay = {
@@ -33,7 +34,6 @@ export default function GamePage({
 
     return (
         <SocketProvider>
-            <GameProvider>
                 <TimerProvider>
                     <DragProvider>
                         <PageLayout>
@@ -42,24 +42,26 @@ export default function GamePage({
                         </PageLayout>
                     </DragProvider>
                 </TimerProvider>
-            </GameProvider>
         </SocketProvider>
     )
 }
 
 function PageLayout({ children }: { children: React.ReactNode }) {
     const { socket } = useSocket();
-    const { gameState, stage, users, userBets } = useGame()
+    const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
+    const stage = useGameStore(state => state.stage)
+    const users = useGameStore(state => state.users, (a, b) => equal(a, b))
+    const userBets = useGameStore(state => state.userBets, (a, b) => equal(a, b))
 
-    const user = gameState?.users?.find(user => user.id === socket.id);
-    const isHost = gameState?.users?.[0].id === socket.id;
+    const user = users?.find(user => user.id === socket.id);
+    const isHost = users?.[0]?.id === socket.id;
     const chipGroups = splitChipsIntoGroups(user?.chips || 0)
 
     return (
         <div className='h-full p-5 flex flex-col justify-between'>
             <div className="grid grid-cols-4 gap-y-2">
                 <JoinLink />
-                <QuestionProgress currentQuestion={gameState?.currentQuestionIndex || 0} totalQuestions={10} />
+                <QuestionProgress currentQuestion={currentQuestionIndex || 0} totalQuestions={10} />
                 <GameSettings />
             </div>
             <div className='flex flex-col items-center gap-6'>

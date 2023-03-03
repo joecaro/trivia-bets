@@ -1,19 +1,22 @@
 'use client'
 
+import equal from "fast-deep-equal";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Bets from "../../components/stages/Bets";
 import Finished from "../../components/stages/Finished";
 import Question from "../../components/stages/Question";
 import Tally from "../../components/stages/Tally";
-import { useGame } from "../../context/gameContext";
 import { useSocket } from "../../context/socketContext";
+import useGameStore from "../../zustand/gameStore";
 import JoinModal from "./(JoinModal)";
 
 export default function Lobby() {
     const [showJoinModal, setShowJoinModal] = useState(true)
-    const { socket } = useSocket()
-    const { create, register, nextStage, newGame, stage, gameId, users } = useGame()
+    const { socket, newGame, nextStage, create, register } = useSocket()
+    const users = useGameStore(state => state.users, (a, b) => equal(a, b))
+    const stage = useGameStore(state => state.stage)
+    const gameId = useGameStore(state => state.gameId)
 
     const searchParams = useSearchParams();
     const joinId = searchParams.get('joinId');

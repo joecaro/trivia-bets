@@ -1,15 +1,19 @@
 'use client'
 
+import equal from "fast-deep-equal";
 import { useEffect } from "react";
-import { useGame } from "../../context/gameContext"
 import { useSocket } from "../../context/socketContext"
+import useGameStore from "../../zustand/gameStore";
 import BetResult from "../BetResult";
 
 export default function Tally() {
-    const { gameState, users, questions } = useGame()
+    const bets = useGameStore(state => state.currentBets, (a, b) => equal(a, b))
+    const answers = useGameStore(state => state.currentAnswers, (a, b) => equal(a, b))
+    const questions = useGameStore(state => state.questions, (a, b) => equal(a, b))
+    const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
+    const users = useGameStore(state => state.users, (a, b) => equal(a, b))
+
     const { socket } = useSocket();
-    const bets = gameState?.currentBets
-    const answers = gameState?.currentAnswers
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -19,7 +23,7 @@ export default function Tally() {
         return () => clearTimeout(timeout)
     }, [])
 
-    if (!gameState || !bets || !answers) return (<div></div>)
+    if ( !bets || !answers) return (<div></div>)
 
     const payout = (answer: string) => {
 
@@ -53,8 +57,8 @@ export default function Tally() {
     return (
         <div className="flex flex-col items-center justify-center gap-5">
             <h1 className="text-2xl font-bold">Tally</h1>
-            <p>{questions[gameState?.currentQuestionIndex || 0].question}</p>
-            <p>Correct Answer: <span className="font-bold text-xl">{questions[gameState?.currentQuestionIndex || 0].answer}</span></p>
+            <p>{questions[currentQuestionIndex || 0].question}</p>
+            <p>Correct Answer: <span className="font-bold text-xl">{questions[currentQuestionIndex || 0].answer}</span></p>
 
             <div>
                 <div id='player-tally' className="w-full max-w-3xl grid grid-cols-3 gap-1 my-4 zoom">

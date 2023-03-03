@@ -41,6 +41,7 @@ export type SocketContextProps = {
     betChip: (betIdx: number, amount: number) => void,
     newGame: () => void,
     destroyGame: () => void,
+    spectate: (gameId: string) => void,
 }
 
 
@@ -55,6 +56,7 @@ const SocketContext = createContext<SocketContextProps>({
     betChip: () => { },
     newGame: () => { },
     destroyGame: () => { },
+    spectate: () => { },
 })
 
 const SocketProvider = ({ children }: { children: ReactNode }) => {
@@ -122,6 +124,12 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [])
 
+    const spectate = useCallback(() => {
+        if (socket) {
+            socket.emit('spectate');
+        }
+    }, [])
+
 
     useEffect(() => {
         if (socket) {
@@ -153,6 +161,10 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
         socket.on('noReconnect', () => {
             console.log('No reconnect');
         });
+        
+        socket.on('noUserOnConnnect', () => {
+            console.log('No user on connect');
+        });
 
         socket.on('noGame', () => {
             setError('No game found');
@@ -177,6 +189,7 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
             betChip,
             newGame,
             destroyGame,
+            spectate,
         }}>
             {children}
         </SocketContext.Provider>

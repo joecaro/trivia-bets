@@ -14,6 +14,7 @@ export interface IGameContext {
     rounds: GameState['rounds'],
     allRounds: GameState['allRounds'],
     error: string | null,
+    isSpectating: boolean,
 }
 
 export const defaultBets: [Bet, Bet] = [{ answer: '', chips: 0, payout: 1 }, { answer: '', chips: 0, payout: 1 }];
@@ -31,6 +32,7 @@ const initialState: IGameContext = {
     allRounds: [],
     userBets: defaultBets,
     error: null,
+    isSpectating: false,
 }
 
 const useGameStore = create<IGameContext & { reset: () => void }>()((set) => ({ ...initialState, reset: () => set(initialState) }))
@@ -49,6 +51,7 @@ export const setRounds = (rounds: Round[]) => useGameStore.setState({ rounds })
 export const setAllRounds = (allRounds: Round[]) => useGameStore.setState({ allRounds })
 export const setError = (error: string | null) => useGameStore.setState({ error })
 export const dismissError = () => useGameStore.setState({ error: null })
+export const setIsSpectating = (isSpectating: boolean) => useGameStore.setState({ isSpectating })
 
 export default useGameStore;
 
@@ -60,7 +63,7 @@ export const storeGame = (gameId: string, socketId: string) => {
 export function selectiveUpdate(newState: Partial<GameState>, socketId: string) {
     setGameState(newState)
     if (newState) {
-        newState.currentQuestionIndex && setCurrentQuestionIndex(newState.currentQuestionIndex);
+        newState.currentQuestionIndex !== undefined && setCurrentQuestionIndex(newState.currentQuestionIndex);
         newState.users && setUsers(newState.users)
         newState.stage && setStage(newState.stage)
         newState.questions && setQuestions(newState.questions)

@@ -35,14 +35,14 @@ export default function GamePage({
 
     return (
         <SocketProvider>
-                <TimerProvider>
-                    <DragProvider>
-                        <PageLayout>
-                            {children}
-                            <ErrorModal />
-                        </PageLayout>
-                    </DragProvider>
-                </TimerProvider>
+            <TimerProvider>
+                <DragProvider>
+                    <PageLayout>
+                        {children}
+                        <ErrorModal />
+                    </PageLayout>
+                </DragProvider>
+            </TimerProvider>
         </SocketProvider>
     )
 }
@@ -53,7 +53,8 @@ function PageLayout({ children }: { children: React.ReactNode }) {
     const stage = useGameStore(state => state.stage)
     const users = useGameStore(state => state.users, (a, b) => equal(a, b))
     const currentBets = useGameStore(state => state.currentBets, (a, b) => equal(a, b))
-
+    const isSpectating = useGameStore(state => state.isSpectating)
+        
     const userBets = useMemo(() => socket.id ? currentBets[socket.id] || defaultBets : defaultBets, [currentBets, socket]);
 
 
@@ -82,26 +83,28 @@ function PageLayout({ children }: { children: React.ReactNode }) {
                         </div>)
                     }
                 </div>
-                <div className="flex gap-3">
-                    <div className="flex gap-1">
-                        {!userBets[0].answer ? (
-                            <Token index={0} token="123" />
-                        ) : null}
-                        {!userBets[1].answer ? (
-                            <Token index={1} token="123" />
-                        ) : null}
+                {!isSpectating ? (
+                    <div className="flex gap-3">
+                        <div className="flex gap-1">
+                            {!userBets[0].answer ? (
+                                <Token index={0} token="123" />
+                            ) : null}
+                            {!userBets[1].answer ? (
+                                <Token index={1} token="123" />
+                            ) : null}
+                        </div>
+                        <div className="grid grid-cols-5 relative">
+                            {
+                                Object.entries(chipGroups).map(([key, value], i) => (
+                                    <div className="border border-slate-200 h-16 w-10 grid" key={"user-chips" + key}>
+                                        <span className="text-slate-400">{chipDisplay[key as keyof typeof chipDisplay]}</span>
+                                        <ChipStack type={key as keyof Chips} chips={value} />
+                                    </div>
+                                ))
+                            }
+                        </div>
                     </div>
-                    <div className="grid grid-cols-5 relative">
-                        {
-                            Object.entries(chipGroups).map(([key, value], i) => (
-                                <div className="border border-slate-200 h-16 w-10 grid" key={"user-chips" + key}>
-                                    <span className="text-slate-400">{chipDisplay[key as keyof typeof chipDisplay]}</span>
-                                    <ChipStack type={key as keyof Chips} chips={value} />
-                                </div>
-                            ))
-                        }
-                    </div>
-                </div>
+                ) : null}
             </div>
         </div>
     )

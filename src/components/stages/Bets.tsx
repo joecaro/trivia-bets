@@ -14,6 +14,7 @@ export default function Bets() {
     const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
     const currentBets = useGameStore(state => state.currentBets, (a, b) => equal(a, b))
     const questions = useGameStore(state => state.questions)
+    const isSpectating = useGameStore(state => state.isSpectating)
 
     const userBets = useMemo(() => socket.id ? currentBets[socket.id] || defaultBets : defaultBets, [currentBets, socket]);
 

@@ -27,6 +27,7 @@ export default function AnswerSpot({
     const currentBets = useGameStore(state => state.currentBets, (a, b) => equal(a, b))
     const { socket } = useSocket();
 
+    
     const userBets = useMemo(() => socket.id ? currentBets[socket.id] || defaultBets : defaultBets, [currentBets, socket]);
 
 

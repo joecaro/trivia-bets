@@ -12,6 +12,7 @@ export default function Tally() {
     const questions = useGameStore(state => state.questions, (a, b) => equal(a, b))
     const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
     const users = useGameStore(state => state.users, (a, b) => equal(a, b))
+    const isSpectating = useGameStore(state => state.isSpectating)
 
     const { socket } = useSocket();
 
@@ -23,7 +24,7 @@ export default function Tally() {
         return () => clearTimeout(timeout)
     }, [])
 
-    if ( !bets || !answers) return (<div></div>)
+    if (!bets || !answers) return (<div></div>)
 
     const payout = (answer: string) => {
 
@@ -62,11 +63,15 @@ export default function Tally() {
 
             <div>
                 <div id='player-tally' className="w-full max-w-3xl grid grid-cols-3 gap-1 my-4 zoom">
-                    <div>
-                        <p className="text-2xl font-bold">You</p>
-                    </div>
-                    <BetResult className="pop-in" verbose={true} answer={closestAnswer} bet={bet1} />
-                    <BetResult className="pop-in" verbose={true} answer={closestAnswer} bet={bet2} />
+                    {!isSpectating && (
+                        <>
+                            <div>
+                                <p className="text-2xl font-bold">You</p>
+                            </div>
+                            <BetResult className="pop-in" verbose={true} answer={closestAnswer} bet={bet1} />
+                            <BetResult className="pop-in" verbose={true} answer={closestAnswer} bet={bet2} />
+                        </>
+                    )}
                 </div>
                 {bets && answers ?
                     users.filter(u => u.id !== socket.id).map((user, i) => {

@@ -21,11 +21,10 @@ export default function Lobby() {
     const searchParams = useSearchParams();
     const joinId = searchParams.get('joinId');
 
-    if (gameId && showJoinModal) {
+    if (gameId && users.find(u => u.id === socket.id) && showJoinModal) {
         setShowJoinModal(false)
     }
 
-    const user = users?.find(user => user.id === socket.id);
     const isHost = users && users[0] && users[0].id === socket.id;
 
     return (

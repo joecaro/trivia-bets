@@ -96,9 +96,9 @@ export default function Page() {
                 <ChipStack chips={1} type='twenty' />
             </Container>
             <Container>
-                <BetResult answer="13" bet={{ answer: '13', bet: 1, odds: 2, payout: 3 }} />
-                <BetResult answer="13" bet={{ answer: '12', bet: 100, odds: 2, payout: 3 }} />
-                <BetResult answer="13" bet={{ answer: '14', bet: 1, odds: 2, payout: 3 }} />
+                <BetResult verbose={true} answer="13" bet={{ answer: '13', bet: 1, odds: 2, payout: 3 }} />
+                <BetResult verbose={true} answer="13" bet={{ answer: '12', bet: 100, odds: 2, payout: 3 }} />
+                <BetResult verbose={true} answer="13" bet={{ answer: '14', bet: 1, odds: 2, payout: 3 }} />
             </Container>
         </div>
     )

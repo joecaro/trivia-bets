@@ -1,10 +1,13 @@
 'use client'
 
+import { useEffect, useState } from "react";
 import { useGame } from "../../context/gameContext"
+import { useTimer } from "../../context/timerContext";
 import AnswerSpot from "../AnswerSpot";
 
 export default function Bets() {
     const { gameState, bet, questions } = useGame()
+    const { timer } = useTimer()
 
     const answers = Object.entries(gameState?.currentAnswers?.answers || {})
 
@@ -19,10 +22,13 @@ export default function Bets() {
         : Math.abs(middle - index) + 2
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col gap-8 items-center justify-center">
             <p className="max-w-lg text-center text-lg font-bold text-slate-700 mb-4">
                 {questions[gameState?.currentQuestionIndex || 0].question}
             </p>
+            <div className="py-1 px-2 rounded bg-slate-500 text-slate-50">
+                {timer ? `⏲ ${timer}s left` : '...'}
+            </div>
             <div className="flex justify-center gap-5">
                 <AnswerSpot key={'none'} label='Smaller than any answer' answer={'none'} onDrop={(betIdx) => bet('none', 5, betIdx)} odds={`5-1`} />
                 {even ?

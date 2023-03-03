@@ -13,6 +13,7 @@ import GameSettings from "./(GameSettings)";
 import splitChipsIntoGroups from "../../lib/splitChips";
 import ErrorModal from "./(ErrorModal)";
 import { Chips } from "../../lib/types";
+import TimerProvider from "../../context/timerContext";
 
 
 const chipDisplay = {
@@ -33,12 +34,14 @@ export default function GamePage({
     return (
         <SocketProvider>
             <GameProvider>
-                <DragProvider>
-                    <PageLayout>
-                        {children}
-                        <ErrorModal />
-                    </PageLayout>
-                </DragProvider>
+                <TimerProvider>
+                    <DragProvider>
+                        <PageLayout>
+                            {children}
+                            <ErrorModal />
+                        </PageLayout>
+                    </DragProvider>
+                </TimerProvider>
             </GameProvider>
         </SocketProvider>
     )

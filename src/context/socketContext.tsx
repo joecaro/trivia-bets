@@ -1,6 +1,5 @@
 "use client"
 
-import { useSearchParams } from "next/navigation";
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { GameState } from "../lib/types";
@@ -12,6 +11,7 @@ type STCEventMap = {
     'noReconnect': () => void,
     'id': (id: string) => void,
     'noGame': () => void,
+    'timer': (seconds: number) => void,
 }
 
 type CTSEventMap = {
@@ -26,7 +26,7 @@ type CTSEventMap = {
     'newGame': () => void,
 }
 
-const socket = io(socketIp || 'http://localhost:8080');
+const socket = io(socketIp || 'https://localhost:8080');
 
 
 const SocketContext = createContext<{

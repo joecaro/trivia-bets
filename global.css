@@ -33,3 +33,38 @@ html, body {
 .ao-shadow {
   box-shadow: 0 0 0 1px rgb(0 0 0 / 15%) inset, 0 0 0 .5px rgba(0,0,0,.2), 0 1px 1px rgb(0 0 0 / 15%);
 }
+
+@keyframes Rotate {
+  0% {
+    transform: translate(-25%, -25%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-25%, -25%) rotate(360deg);
+  }
+}
+
+.color-wheel-background-rotate {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  z-index: -1;
+  background: conic-gradient(#f6d365, #fda085, #b448de, #fda085  );;
+  -webkit-animation: Rotate 3s linear infinite;
+  -moz-animation: Rotate 3s linear infinite;
+  animation: Rotate 3s linear infinite;
+}
+
+
+
+@keyframes POPIN {
+  0% {
+    transform: scale(.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pop-in {
+  animation: POPIN 0.5s ease-in-out;
+}

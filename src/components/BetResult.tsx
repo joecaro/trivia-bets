@@ -8,11 +8,13 @@ type BetResult = {
 type Payout = number | 'NO BET' | 'TOO HIGH' | 'TOO LOW'
 
 type Props = {
+    verbose: boolean,
     bet: BetResult,
     answer: string | 'none',
+    className?: string,
 }
-export default function BetResult({ bet, answer }: Props) {
-    
+export default function BetResult({ verbose, bet, answer, className }: Props) {
+
     const payout = (v: string) => {
         const correctAnswer = Number(v);
         const userAnswer = Number(bet.answer);
@@ -21,7 +23,7 @@ export default function BetResult({ bet, answer }: Props) {
         if (bet.answer === null) {
             return 'NO BET'
         }
-        
+
         // answer is a number
         if (correctAnswer === userAnswer) {
             return (bet.bet + 1) * bet.odds;
@@ -47,28 +49,29 @@ export default function BetResult({ bet, answer }: Props) {
     }
 
     return (
-        <div className="p-2 flex flex-col gap-3 bg-slate-200 border border-gray-400 rounded">
-            {/* answer betted */}
-            <div className="grid grid-cols-2">
-                <p className="text-slate-600">Answer:</p>
-                <p className="text-center font-bold">{bet.answer}</p>
-            </div>
-            {/* total bet */}
-            <div className="grid grid-cols-2 justify-items-center">
-                <p className="text-slate-600">Total Bet:</p>
-                <div className="px-2 aspect-square border rounded-full flex justify-center items-center bg-orange-300 border-slate-300">
-                    <p className="text-center text-orange-800">{bet.bet + 1}</p>
-                </div>
-            </div>
-            {/* odds */}
-            <div className="grid grid-cols-2">
-                <p className="text-slate-600">Odds:</p>
-                <p className="text-center bg-slate-500 text-slate-50 rounded">{`${bet.odds}-1`}</p>
-            </div>
-            {/* payout */}
-            <Payout payout={payout(answer)} />
-            <div>
-
+        <div className={`relative rounded overflow-hidden flex ${className}`}>
+            {verbose && !isNaN(Number(payout(answer))) && <div className="color-wheel-background-rotate" />}
+            <div className="p-2 flex flex-col gap-3 bg-slate-200 border border-gray-400 rounded self-stretch m-1 rotating-border">
+                {verbose &&
+                    <>
+                        <div className="grid grid-cols-2">
+                            <p className="text-slate-600">Answer:</p>
+                            <p className="text-center font-bold">{bet.answer}</p>
+                        </div>
+                        <div className="grid grid-cols-2 justify-items-center">
+                            <p className="text-slate-600">Total Bet:</p>
+                            <div className="px-2 aspect-square border rounded-full flex justify-center items-center bg-orange-300 border-slate-300">
+                                <p className="text-center text-orange-800">{bet.bet + 1}</p>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2">
+                            <p className="text-slate-600">Odds:</p>
+                            <p className="text-center bg-slate-500 text-slate-50 rounded">{`${bet.odds}-1`}</p>
+                        </div>
+                    </>
+                }
+                {/* payout */}
+                <Payout payout={payout(answer)} />
             </div>
         </div>
     )

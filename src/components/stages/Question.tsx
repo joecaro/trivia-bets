@@ -2,10 +2,12 @@
 
 import { SyntheticEvent, useState } from "react"
 import { useGame } from "../../context/gameContext"
+import { useTimer } from "../../context/timerContext"
 
 export default function Question() {
     const [answer, setAnswer] = useState('')
     const { gameState, questions, submitAnswer, users } = useGame()
+    const { timer } = useTimer()
 
     const handleAnswerChange = (e: SyntheticEvent<HTMLInputElement>) => {
         setAnswer(e.currentTarget.value)
@@ -24,7 +26,7 @@ export default function Question() {
                 {questions[gameState?.currentQuestionIndex || 0].question}
             </p>
             <div className="py-1 px-2 rounded bg-slate-500 text-slate-50">
-               ⏲ 49s left
+               {timer ? `⏲ ${timer}s left` : '...'}
             </div>
             <div className="flex gap-2">
                 <input className="p-2 border-slate-400 border rounded" type='number' value={answer} onChange={handleAnswerChange} />

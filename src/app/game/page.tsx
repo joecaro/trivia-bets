@@ -3,6 +3,7 @@
 import equal from "fast-deep-equal";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
 import Bets from "../../components/stages/Bets";
 import Finished from "../../components/stages/Finished";
 import Question from "../../components/stages/Question";
@@ -10,6 +11,9 @@ import Tally from "../../components/stages/Tally";
 import { useSocket } from "../../context/socketContext";
 import useGameStore from "../../zustand/gameStore";
 import JoinModal from "./(JoinModal)";
+
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Lobby() {
     const [showJoinModal, setShowJoinModal] = useState(true)
@@ -55,6 +59,8 @@ export default function Lobby() {
                     {stage === 'lobby' ? 'Start Game' : 'Next Stage'}
                 </button>}
             </div>
+      <ToastContainer />
+
         </>
     )
 }

@@ -1,9 +1,22 @@
 'use client'
 
 import { SyntheticEvent, useState } from "react"
+import { toast } from "react-toastify"
 import { useSocket } from "../../context/socketContext"
 import { useTimer } from "../../context/timerContext"
 import useGameStore from "../../zustand/gameStore"
+
+function isValidInput(input: string) {
+    const num = parseFloat(input);
+    // Check if input is a positive integer
+    if (Number.isInteger(num) && num >= 0) {
+        console.log("Valid input: " + num);
+        
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 export default function Question() {
     const [answer, setAnswer] = useState('')
@@ -21,7 +34,11 @@ export default function Question() {
     }
 
     const handleSubmit = () => {
-        setAnswer('')
+        if (!isValidInput(answer)) {
+            toast.warn('Please enter an Postive Integer')
+            setAnswer('')
+            return
+        }
         submitAnswer(answer)
     }
     return (

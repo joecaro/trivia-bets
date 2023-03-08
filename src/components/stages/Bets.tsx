@@ -6,6 +6,7 @@ import { useSocket } from "../../context/socketContext";
 import { useTimer } from "../../context/timerContext";
 import useGameStore, { defaultBets, setUserBets } from "../../zustand/gameStore";
 import AnswerSpot from "../AnswerSpot";
+import QuestionText from "../QuestionText";
 import Timer from "../Timer";
 
 export default function Bets() {
@@ -20,8 +21,6 @@ export default function Bets() {
 
     const { bet } = useSocket();
 
-    const { timer } = useTimer()
-
     const answers = Object.entries(currentAnswers?.answers || {})
 
     answers.sort((a, b) => parseInt(a[1].answer) - parseInt(b[1].answer))
@@ -34,7 +33,7 @@ export default function Bets() {
         ? index < middle ? middle - index + 1 : index - middle + 2
         : Math.abs(middle - index) + 2
 
-    const composeBet = (answer: string, odds: number, ) => {
+    const composeBet = (answer: string, odds: number,) => {
         return (betIdx: number) => {
             const betDup = [...userBets]
             betDup[betIdx] = { answer, payout: odds, chips: betDup[betIdx].chips }
@@ -44,10 +43,7 @@ export default function Bets() {
     }
     return (
         <div className="flex flex-col gap-8 items-center justify-center">
-            <p className="max-w-lg text-center text-lg font-bold text-slate-700 mb-4">
-                {questions[currentQuestionIndex || 0].question}
-            </p>
-            <Timer /> 
+            <Timer />
             <div className="flex justify-center gap-5">
                 <AnswerSpot key={'none'} label='Smaller than any answer' answer={'none'} onDrop={(betIdx) => bet('none', 5, betIdx)} odds={`5-1`} />
                 {even ?

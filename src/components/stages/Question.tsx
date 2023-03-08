@@ -4,23 +4,22 @@ import { SyntheticEvent, useState } from "react"
 import { toast } from "react-toastify"
 import { useSocket } from "../../context/socketContext"
 import useGameStore from "../../zustand/gameStore"
+import QuestionText from "../QuestionText"
 import Timer from "../Timer"
 
 function isValidInput(input: string) {
     const num = parseFloat(input);
     // Check if input is a positive integer
     if (Number.isInteger(num) && num >= 0) {
-        console.log("Valid input: " + num);
-        
-      return true;
+        return true;
     } else {
-      return false;
+        return false;
     }
-  }
+}
 
 export default function Question() {
     const [answer, setAnswer] = useState('')
-    
+
     const currentQuestionIndex = useGameStore(state => state.currentQuestionIndex)
     const questions = useGameStore(state => state.questions)
     const isSpectating = useGameStore(state => state.isSpectating)
@@ -45,17 +44,15 @@ export default function Question() {
             <p className="text-slate-500 font-bold">
                 question {currentQuestionIndex + 1 || 0} of 10
             </p>
-            <p className="max-w-lg text-center text-lg font-bold text-slate-700">
-                {questions[currentQuestionIndex || 0].question}
-            </p>
+            <QuestionText question={questions[currentQuestionIndex || 0].question} />
             <Timer />
-            {!isSpectating &&<div className="flex gap-2">
-                <input 
-                className="p-2 border-slate-400 border rounded" 
-                type='number' 
-                value={answer} 
-                onChange={handleAnswerChange}
-                onKeyUp={e => e.key === 'Enter' && handleSubmit()} 
+            {!isSpectating && <div className="flex gap-2">
+                <input
+                    className="p-2 border-slate-400 border rounded"
+                    type='number'
+                    value={answer}
+                    onChange={handleAnswerChange}
+                    onKeyUp={e => e.key === 'Enter' && handleSubmit()}
                 />
                 <button
                     className="py-2 px-4 bg-blue-500 text-slate-50 border rounded shadow-sm"

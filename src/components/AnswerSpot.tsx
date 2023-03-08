@@ -77,6 +77,8 @@ type CardProps = {
 
 export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, odds, userChips }: CardProps) {
     const { betChip } = useSocket();
+    const stage = useGameStore(state => state.stage)
+    const currentAnswers = useGameStore(state => state.currentAnswers, (a, b) => equal(a, b))
     const [collectedProps, drop] = useDrop(() => ({
         accept: 'token',
         drop: (item: { idx: number }) => {
@@ -88,7 +90,7 @@ export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, od
         <div className='grid gap-2'>
             <div
                 ref={drop}
-                className={` ${!answer && 'opacity-30'} bg-slate-400 rounded flex flex-col justify-between items-center cursor-pointer w-40 h-60 relative shadow`}
+                className={` ${!answer && 'opacity-30'} ${stage === 'betResults' && answer === currentAnswers.closestAnswer.answer ? "pulse-bg" : ''} bg-slate-400 rounded flex flex-col justify-between items-center cursor-pointer w-40 h-60 relative shadow`}
             >
                 <div className="flex gap-3 absolute top-0 left-0 w-full">
                     <div className='px-1 py-2'>

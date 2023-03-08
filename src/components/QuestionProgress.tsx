@@ -16,7 +16,7 @@ export default function QuestionProgress({
                         className={`w-10 h-10 rounded-full border-2 flex justify-center items-center ${i < currentQuestion
                                 ? "bg-blue-400 border-blue-500 text-slate-50"
                                 : i === currentQuestion 
-                                    ? "bg-orange-200 border-orange-300 text-slate-900"
+                                    ? "bg-green-200 border-green-300 text-slate-900"
                                     : "bg-slate-400 border-slate-500"
                             }`}
                     >

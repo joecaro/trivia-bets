@@ -6,6 +6,7 @@ import { useSocket } from "../../context/socketContext"
 import { Bet } from "../../lib/types";
 import useGameStore from "../../zustand/gameStore";
 import BetResult from "../BetResult";
+import QuestionText from "../QuestionText";
 
 function formatBets(userBets: [Bet, Bet], closestAnswer: string) {
     const bet1 = {
@@ -52,16 +53,14 @@ export default function Tally() {
 
     return (
         <div className="flex flex-col items-center justify-center gap-5">
-            <h1 className="text-2xl font-bold">Tally</h1>
-            <p>{questions[currentQuestionIndex || 0].question}</p>
-            <p>Correct Answer: <span className="font-bold text-xl">{questions[currentQuestionIndex || 0].answer}</span></p>
+            <p className="text-slate-600 text-2xl">Correct Answer: <span className="font-bold text-xl text-slate-600">{questions[currentQuestionIndex || 0].answer}</span></p>
 
             <div>
                 <div id='player-tally' className="w-full max-w-3xl grid grid-cols-3 gap-1 my-4 zoom">
                     {!isSpectating && (
                         <>
                             <div>
-                                <p className="text-2xl font-bold">You</p>
+                                <p className="text-2xl font-bold text-slate-600">You</p>
                             </div>
                             <BetResult className="pop-in" verbose={true} answer={closestAnswer} bet={bet1} />
                             <BetResult className="pop-in" verbose={true} answer={closestAnswer} bet={bet2} />
@@ -73,12 +72,12 @@ export default function Tally() {
                         const closestAnswer = answers?.closestAnswer.answer || 'none'
                         const userBets = bets?.[user.id] || []
 
-                        
+
                         const [bet1, bet2] = formatBets(userBets, closestAnswer)
 
                         return (
                             <div key={user.id} className="w-full max-w-3xl grid grid-cols-3 gap-1 my-4">
-                                <div className="">
+                                <div className="text-slate-600">
                                     <p>{user.name}</p>
                                 </div>
                                 <BetResult className="justify-center" verbose={false} answer={closestAnswer} bet={bet1} />

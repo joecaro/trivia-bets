@@ -1,14 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import JoinLink from "./(JoinLink)"
 import SocketProvider, { useSocket } from "../../context/socketContext"
 import Player from "../../components/Player";
 import Token from "../../components/Token";
 import ChipStack from "../../components/ChipStack";
 import QuestionProgress from "../../components/QuestionProgress";
 import DragProvider from "../../context/DndContext";
-import GameSettings from "./(GameSettings)";
 import splitChipsIntoGroups from "../../lib/splitChips";
 import ErrorModal from "./(ErrorModal)";
 import { Chips } from "../../lib/types";
@@ -16,6 +14,8 @@ import TimerProvider from "../../context/timerContext";
 import useGameStore, { defaultBets } from '../../zustand/gameStore';
 import equal from 'fast-deep-equal';
 import { useMemo } from 'react';
+import LeftCorner from './(LeftCorner)';
+import RightCorner from './(RightCorner)';
 
 
 const chipDisplay = {
@@ -64,10 +64,10 @@ function PageLayout({ children }: { children: React.ReactNode }) {
 
     return (
         <div className='h-full p-5 flex flex-col justify-between'>
-            <div className="grid grid-cols-4 gap-y-2">
-                <JoinLink />
+            <div className="grid grid-cols-4 gap-y-2 items-center">
+                <LeftCorner />
                 <QuestionProgress currentQuestion={currentQuestionIndex || 0} totalQuestions={10} />
-                <GameSettings />
+                <RightCorner />
             </div>
             <div className='flex flex-col items-center gap-6'>
                 {isHost && stage === 'bets' ? <p>Bets: {JSON.stringify(userBets)}</p> : null}
@@ -96,8 +96,8 @@ function PageLayout({ children }: { children: React.ReactNode }) {
                         <div className="grid grid-cols-5 relative">
                             {
                                 Object.entries(chipGroups).map(([key, value], i) => (
-                                    <div className="border border-slate-200 h-16 w-10 grid" key={"user-chips" + key}>
-                                        <span className="text-slate-400">{chipDisplay[key as keyof typeof chipDisplay]}</span>
+                                    <div className="border border-slate-100 bg-slate-200 h-16 w-10 grid" key={"user-chips" + key}>
+                                        <span className="text-slate-600">{chipDisplay[key as keyof typeof chipDisplay]}</span>
                                         <ChipStack type={key as keyof Chips} chips={value} />
                                     </div>
                                 ))

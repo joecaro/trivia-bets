@@ -41,7 +41,7 @@ const useGameStore = create<IGameContext & { reset: () => void }>()((set) => ({ 
 export const setGameState = (gameState: Partial<GameState>) => useGameStore.setState({ gameState })
 export const setGameId = (gameId: string) => useGameStore.setState({ gameId })
 export const setUsers = (users: User[]) => useGameStore.setState({ users })
-export const setStage = (stage: 'lobby' | 'question' | 'bets' | 'tally' | 'finished') => useGameStore.setState({ stage })
+export const setStage = (stage: GameState['stage']) => useGameStore.setState({ stage })
 export const setCurrentQuestionIndex = (currentQuestionIndex: number) => useGameStore.setState({ currentQuestionIndex })
 export const setQuestions = (questions: Question[]) => useGameStore.setState({ questions })
 export const setCurrentAnswers = (currentAnswers: AnswerGroup) => useGameStore.setState({ currentAnswers })

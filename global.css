@@ -68,3 +68,21 @@ html, body {
 .pop-in {
   animation: POPIN 0.5s ease-in-out;
 }
+
+@keyframes PulseBg {
+  0% {
+    background-color: #f6d365;
+  }
+  50% {
+    background-color: #94a3b8;
+  }
+  100% {
+    background-color: #f6d365;
+  }
+}
+
+.pulse-bg {
+  -webkit-animation: PulseBg 3s ease-in-out infinite;
+  -moz-animation: PulseBg 3s ease-in-out infinite;
+  animation: PulseBg 1s step-start infinite;
+}

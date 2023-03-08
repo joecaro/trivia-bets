@@ -2,13 +2,14 @@ const STAGE_MAP = {
     "lobby": "lobby",
     "question": "question",
     "bets": "bets",
+    "betResults": "betResults",
     "tally": "tally",
     "finished": "finished"
 }
 
 export type Question = {
     question: string,
-    answer: string[],
+    answer: string,
 }
 
 export type User = {

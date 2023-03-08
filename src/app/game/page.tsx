@@ -40,7 +40,7 @@ export default function Lobby() {
                     : stage === 'question' ? (
                         <Question />
                     )
-                        : stage === 'bets' ? (
+                        : stage === 'bets' || stage === 'betResults' ? (
                             <Bets />
                         )
                             : stage === 'tally' ? (

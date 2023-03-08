@@ -45,6 +45,10 @@ export default function BetResult({ verbose, bet, answer, className }: Props) {
             return "TOO HIGH"
         }
 
+        if (bet.answer === 'none') {
+            return 'TOO LOW'
+        }
+
         return 'NO BET'
     }
 

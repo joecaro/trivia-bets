@@ -53,7 +53,13 @@ export default function Question() {
                {timer ? `⏲ ${timer}s left` : '...'}
             </div>
             {!isSpectating &&<div className="flex gap-2">
-                <input className="p-2 border-slate-400 border rounded" type='number' value={answer} onChange={handleAnswerChange} />
+                <input 
+                className="p-2 border-slate-400 border rounded" 
+                type='number' 
+                value={answer} 
+                onChange={handleAnswerChange}
+                onKeyUp={e => e.key === 'Enter' && handleSubmit()} 
+                />
                 <button
                     className="py-2 px-4 bg-blue-500 text-slate-50 border rounded shadow-sm"
                     onClick={handleSubmit}>Submit</button>

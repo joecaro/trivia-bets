@@ -4,9 +4,9 @@ import equal from "fast-deep-equal";
 import { useMemo } from "react";
 import { useSocket } from "../../context/socketContext";
 import { useTimer } from "../../context/timerContext";
-import { BetGroup } from "../../lib/types";
 import useGameStore, { defaultBets, setUserBets } from "../../zustand/gameStore";
 import AnswerSpot from "../AnswerSpot";
+import Timer from "../Timer";
 
 export default function Bets() {
     const { socket } = useSocket();
@@ -47,9 +47,7 @@ export default function Bets() {
             <p className="max-w-lg text-center text-lg font-bold text-slate-700 mb-4">
                 {questions[currentQuestionIndex || 0].question}
             </p>
-            <div className="py-1 px-2 rounded bg-slate-500 text-slate-50">
-                {timer ? `⏲ ${timer}s left` : '...'}
-            </div>
+            <Timer /> 
             <div className="flex justify-center gap-5">
                 <AnswerSpot key={'none'} label='Smaller than any answer' answer={'none'} onDrop={(betIdx) => bet('none', 5, betIdx)} odds={`5-1`} />
                 {even ?

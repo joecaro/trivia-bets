@@ -17,7 +17,7 @@ export default function Player({
     const stage = useGameStore(state => state.stage)
     const currentAnswers = useGameStore(state => state.currentAnswers, (a, b) => equal(a, b))
 
-    const isFaded = stage === 'question' && currentAnswers?.answers?.[id]
+    const isFaded = stage === 'question' && !currentAnswers?.answers?.[id]
 
     return (
         <div className={`flex gap-5 items-center bg-slate-300 border border-slate-500 rounded px-1 py-1 ${isFaded ? 'opacity-50' : ''}`}>

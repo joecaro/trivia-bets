@@ -3,8 +3,8 @@
 import { SyntheticEvent, useState } from "react"
 import { toast } from "react-toastify"
 import { useSocket } from "../../context/socketContext"
-import { useTimer } from "../../context/timerContext"
 import useGameStore from "../../zustand/gameStore"
+import Timer from "../Timer"
 
 function isValidInput(input: string) {
     const num = parseFloat(input);
@@ -27,7 +27,6 @@ export default function Question() {
 
     const { submitAnswer } = useSocket()
 
-    const { timer } = useTimer()
 
     const handleAnswerChange = (e: SyntheticEvent<HTMLInputElement>) => {
         setAnswer(e.currentTarget.value)
@@ -49,9 +48,7 @@ export default function Question() {
             <p className="max-w-lg text-center text-lg font-bold text-slate-700">
                 {questions[currentQuestionIndex || 0].question}
             </p>
-            <div className="py-1 px-2 rounded bg-slate-500 text-slate-50">
-               {timer ? `⏲ ${timer}s left` : '...'}
-            </div>
+            <Timer />
             {!isSpectating &&<div className="flex gap-2">
                 <input 
                 className="p-2 border-slate-400 border rounded" 

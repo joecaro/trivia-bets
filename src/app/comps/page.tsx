@@ -6,6 +6,7 @@ import BetResult from "../../components/BetResult";
 import ChipStack from "../../components/ChipStack";
 import Player from "../../components/Player";
 import QuestionProgress from "../../components/QuestionProgress";
+import { TimerBar } from "../../components/Timer";
 import Token from "../../components/Token";
 import splitChipsIntoGroups from "../../lib/splitChips";
 
@@ -63,9 +64,9 @@ export default function Page() {
                 </div>
             </Container>
             <Container>
-            <AnswerCard
+                <AnswerCard
                     onDrop={console.log}
-                    tokens={[<Token key={'yeppy'} token='wejjs' index={123}/>, <Token key={'ppy'} token='wejjs' index={123}/>]}
+                    tokens={[<Token key={'yeppy'} token='wejjs' index={123} />, <Token key={'ppy'} token='wejjs' index={123} />]}
                     chips={splitChipsIntoGroups(135)}
                     label='label'
                     answer='answer'
@@ -73,9 +74,9 @@ export default function Page() {
                     odds='2-1'
                     userChips={100}
                 />
-            <AnswerCard
+                <AnswerCard
                     onDrop={console.log}
-                    tokens={[<Token key={'yeppy'} token='wejjs' index={123}/>, <Token key={'ppy'} token='wejjs' index={123}/>]}
+                    tokens={[<Token key={'yeppy'} token='wejjs' index={123} />, <Token key={'ppy'} token='wejjs' index={123} />]}
                     chips={splitChipsIntoGroups(0)}
                     label='label'
                     answer='answer'
@@ -83,6 +84,11 @@ export default function Page() {
                     odds='2-1'
                     userChips={100}
                 />
+            </Container>
+            <Container>
+                <TimerBar timer={5} />
+                <TimerBar timer={15} />
+                <TimerBar timer={25} />
             </Container>
             <Container>
                 <Token token="hslfj" index={1234} />

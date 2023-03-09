@@ -95,11 +95,12 @@ export default function Page() {
             </Container>
             <Container>
                 <ChipStack chips={10} type='fifty' />
+                <ChipStack chips={2} type='twenty' />
+                <ChipStack chips={1} type='twenty' />
                 <ChipStack chips={5} type='ten' />
                 <ChipStack chips={4} type='five' />
                 <ChipStack chips={3} type='five' />
-                <ChipStack chips={2} type='twenty' />
-                <ChipStack chips={1} type='twenty' />
+                <ChipStack chips={3} type='one' />
             </Container>
             <Container>
                 <BetResult verbose={true} answer="13" bet={{ answer: '13', bet: 1, odds: 2, payout: 3 }} />

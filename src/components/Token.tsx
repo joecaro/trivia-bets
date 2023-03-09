@@ -1,5 +1,6 @@
 import { Ref } from 'react';
 import { useDrag } from 'react-dnd'
+import OneSvg from './Chips/1';
 
 export default function Token({token, index}: {token: string, index: number}) {
     const [collected, drag, dragPreview]: [{isDragging: boolean}, Ref<HTMLElement>, Ref<HTMLElement>] = useDrag(() => ({
@@ -9,16 +10,12 @@ export default function Token({token, index}: {token: string, index: number}) {
 
     return (
         collected.isDragging ? (
-            <div ref={dragPreview} className="w-12 h-12 rounded-full bg-blue-300 border-2 border-blue-100 relative">
-                <div className="w-12 h-12 rounded-full bg-blue-300 border-2 border-blue-100 absolute flex justify-center items-center" style={{ left: '-2px', bottom: '2px' }}>
-                    <p className="text-slate-800 text-lg">TB</p>
-                </div>
+            <div ref={dragPreview} className="w-16 h-16 rounded-full bg-blue-50 border-2 border-blue-50 relative shadow-md ao-shadow">
+                <OneSvg />
             </div>
         ) : (
-            <div ref={drag} className="w-12 h-12 rounded-full bg-blue-300 border-2 border-blue-100 relative shadow-md ao-shadow">
-                <div className="w-12 h-12 rounded-full bg-blue-300 border-2 border-blue-100 absolute flex justify-center items-center" style={{ left: '-2px', bottom: '2px' }}>
-                    <p className="text-slate-800 text-lg">TB</p>
-                </div>
+            <div ref={drag} className="w-16 h-16 rounded-full bg-blue-50 border-2 border-blue-50 relative shadow-md ao-shadow">
+                <OneSvg />
             </div>
         )
 

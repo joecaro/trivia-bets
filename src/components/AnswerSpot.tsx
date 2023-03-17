@@ -13,6 +13,8 @@ import Token from "./Token";
 type AnswerSpotProps = {
     label?: string,
     answer?: string,
+    userId?: string,
+    userName?: string,
     onDrop: (betIndex: number) => void,
     odds: string
 }
@@ -20,6 +22,8 @@ type AnswerSpotProps = {
 export default function AnswerSpot({
     label,
     answer,
+    userId,
+    userName,
     onDrop,
     odds
 }: AnswerSpotProps) {
@@ -27,7 +31,7 @@ export default function AnswerSpot({
     const currentBets = useGameStore(state => state.currentBets, (a, b) => equal(a, b))
     const { socket } = useSocket();
 
-    
+
     const userBets = useMemo(() => socket.id ? currentBets[socket.id] || defaultBets : defaultBets, [currentBets, socket]);
 
 
@@ -56,6 +60,7 @@ export default function AnswerSpot({
                 chips={chips}
                 label={label}
                 answer={answer}
+                userName={userName || users.find(user => user.id === userId)?.name}
                 otherBets={otherBets}
                 odds={odds}
                 userChips={userChips}
@@ -70,12 +75,13 @@ type CardProps = {
     chips: Chips,
     label?: string,
     answer?: string,
+    userName?: string,
     otherBets: [string, [Bet, Bet]][],
     odds: string,
     userChips: number
 }
 
-export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, odds, userChips }: CardProps) {
+export function AnswerCard({ onDrop, tokens, chips, label, answer, userName, otherBets, odds, userChips }: CardProps) {
     const { betChip } = useSocket();
     const stage = useGameStore(state => state.stage)
     const currentAnswers = useGameStore(state => state.currentAnswers, (a, b) => equal(a, b))
@@ -107,7 +113,16 @@ export function AnswerCard({ onDrop, tokens, chips, label, answer, otherBets, od
                     </div>
                 </div>
                 <div className='flex flex-col w-full flex-1 justify-center items-center'>
-                    <p className={`w-3/4 py-2 px-5 bg-amber-100 rounded-sm  text-slate-800 ${label ? 'text-lg' : 'text-2xl'} flex justify-center items-center shadow`}>{label || answer || ''}</p>
+                    <div
+                        className={
+                            `w-3/4 bg-amber-100 rounded  text-slate-800 
+                            ${label ? 'text-lg' : 'text-2xl'} 
+                            flex flex-col justify-center items-center shadow`
+                        }
+                    >
+                        <span className='px-2 w-full bg-amber-200'>{userName}</span>
+                        <span className='p-3'>{label || answer || ''}</span>
+                    </div>
                 </div>
                 <div className='grid grid-cols-3 bg-slate-300 w-full rounded p-1'>
                     <div></div>

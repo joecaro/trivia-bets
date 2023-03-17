@@ -7,6 +7,13 @@ const STAGE_MAP = {
     "finished": "finished"
 }
 
+export const ICON_MAP = {
+    "smiley": "😀",
+    "frown": "😞",
+    "neutral": "😐",
+    "question": "❓"
+}
+
 export type Question = {
     question: string,
     answer: string,
@@ -16,6 +23,7 @@ export type User = {
     id: string,
     name: string,
     chips: number,
+    icon: keyof typeof ICON_MAP,
     active: boolean,
 }
 

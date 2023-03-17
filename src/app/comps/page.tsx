@@ -9,40 +9,26 @@ import QuestionProgress from "../../components/QuestionProgress";
 import { TimerBar } from "../../components/Timer";
 import Token from "../../components/Token";
 import splitChipsIntoGroups from "../../lib/splitChips";
+import useFakeGameStore from "./(fakeStore)";
 
-const WIDTH = 24;
 const CURRENT_QUESTION = 1;
-const PLAYERS = [
-    'john',
-    'jim',
-    'josh',
-    'jared',
-    'joe',
-]
-const ANSWERS = [
-    '13',
-    '23',
-    '43',
-    '98',
-    '134',
-]
-
-const MIDDLE = ANSWERS.length % 2 === 0 ? ANSWERS.length / 2 : (ANSWERS.length - 1) / 2;
 
 export default function Page() {
+    const users = useFakeGameStore(state => state.users)
+    const currentAnswers = useFakeGameStore(state => state.currentAnswers)
     return (
         <div className='p-5 grid'>
             <h1 className="text-2xl font-bold">
                 Components
             </h1>
             <Container>
-                <Player name="NAME" id='1asd2' image="IMAGE" score={0} />
+                <Player name="NAME" id='1asd2' icon="neutral" score={0} />
             </Container>
             <Container>
                 <div className="flex gap-2 justify-between">
                     {
-                        PLAYERS.map((name, i) => (
-                            <Player key={name} id='1asd2' name={name} image="IMAGE" score={0} />
+                        users.map((user, i) => (
+                            <Player key={user.id} id='1asd2' name={user.name} icon="frown" score={0} />
                         ))
                     }
                 </div>
@@ -53,11 +39,13 @@ export default function Page() {
             <Container>
                 <div className="grid grid-cols-5 gap-2">
                     {
-                        ANSWERS.map((answer, i) => (
+                        Object.keys(currentAnswers.answers).map((key, i) => (
                             <AnswerSpot
                                 key={'answer' + i}
-                                answer={answer}
-                                odds={`${(Math.abs(MIDDLE - i) + 2).toString()}-1`}
+                                answer={currentAnswers.answers[key].answer}
+                                userId={key}
+                                userName={users.find(user => user.id === key)?.name}
+                                odds={`${(Math.floor(Math.abs(Object.keys(currentAnswers.answers).length / 2) - i) + 2).toString()}-1`}
                                 onDrop={(betIndex) => console.log(betIndex)} />
                         ))
                     }

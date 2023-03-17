@@ -20,6 +20,7 @@ type CTSEventMap = {
     'register': (user: string, gameId: string) => void,
     'reconnect': (id: string, gameId: string) => void,
     'unregister': () => void,
+    'updateUser': (user: string) => void,
     'nextStage': () => void,
     'submitAnswer': (answer: string) => void,
     'bet': (answer: string, payout: number, betIdx: number) => void,
@@ -42,6 +43,7 @@ export type SocketContextProps = {
     newGame: () => void,
     destroyGame: () => void,
     spectate: (gameId: string) => void,
+    updateUser: (key: string, value: string) => void,
 }
 
 
@@ -57,6 +59,7 @@ const SocketContext = createContext<SocketContextProps>({
     newGame: () => { },
     destroyGame: () => { },
     spectate: () => { },
+    updateUser: () => { },
 })
 
 const SocketProvider = ({ children }: { children: ReactNode }) => {
@@ -129,6 +132,11 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
             socket.emit('spectate');
         }
     }, [])
+    const updateUser = useCallback((key: string, value: string) => {
+        if (socket) {
+            socket.emit('updateUser', key, value);
+        }
+    }, [])
 
 
     useEffect(() => {
@@ -190,6 +198,7 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
             newGame,
             destroyGame,
             spectate,
+            updateUser,
         }}>
             {children}
         </SocketContext.Provider>

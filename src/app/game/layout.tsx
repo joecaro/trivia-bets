@@ -79,7 +79,7 @@ function PageLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex gap-3">
                     {
                         users.map((user, i) => <div key={i} className='flex flex-row items-center'>
-                            <Player key={user.id} name={user.name} id={user.id} image="IMAGE" score={user.chips} />
+                            <Player key={user.id} name={user.name} id={user.id} icon={user.icon} score={user.chips} />
                         </div>)
                     }
                 </div>

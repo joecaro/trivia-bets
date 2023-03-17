@@ -25,18 +25,21 @@ const initialGameState: GameState = {
         {
             id: '1234',
             name: 'Jim',
+            icon: 'smiley',
             chips: 234,
             active: true,
         },
         {
             id: '5678',
             name: 'Bob',
+            icon: 'neutral',
             chips: 234,
             active: true,
         },
         {
             id: '9101',
             name: 'Sally',
+            icon: 'frown',
             chips: 234,
             active: true,
         },

@@ -28,7 +28,7 @@ export default function Page() {
                 <div className="flex gap-2 justify-between">
                     {
                         users.map((user, i) => (
-                            <Player key={user.id} id='1asd2' name={user.name} icon="frown" score={0} />
+                            <Player key={user.id} id='1asd2' name={user.name} icon={user.icon} score={0} />
                         ))
                     }
                 </div>

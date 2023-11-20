@@ -1,12 +1,11 @@
 import { useState } from "react";
 import useGameStore from "../../zustand/gameStore";
-import { socketIp } from "../../context/socketContext";
 
 export default function JoinLink() {
     const id = useGameStore(state => state.gameId)
     const [copied, setCopied] = useState(false);
 
-    const link = `https://triviabets.vercel.app/game?joinId=${id}`
+    const link = `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://triviabets.vercel.app'}/game?joinId=${id}`
     const copyLink = () => {
         navigator.clipboard.writeText(link);
         setCopied(true);

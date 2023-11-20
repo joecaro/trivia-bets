@@ -32,9 +32,6 @@ export default function Player({
         updateUser('name', inputName)
     }
 
-    console.log({ icon });
-
-
     return (
         <div className={`flex gap-5 items-center bg-slate-300 border border-slate-500 rounded px-1 py-1 ${isFaded ? 'opacity-50' : ''}`}>
             <div className="flex gap-1 items-center">

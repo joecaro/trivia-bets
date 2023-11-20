@@ -167,15 +167,20 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
         }
 
         socket.on('noReconnect', () => {
-            console.log('No reconnect');
         });
         
         socket.on('noUserOnConnnect', () => {
-            console.log('No user on connect');
         });
 
         socket.on('noGame', () => {
             setError('No game found');
+        });
+
+        socket.onAnyOutgoing((event, ...args) => {
+            console.group("EVENT SENT")
+            console.log("EVENT", event)
+            console.log("EVENT ARGS", args)
+            console.groupEnd()
         });
 
         return () => {
